@@ -1,0 +1,27 @@
+.art-container {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.art-image {
+  width: auto;
+  height: auto;
+
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.smallart-image {
+  width: 70%;
+  height: auto;
+
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+
+.art-caption {
+  margin-top: 1rem;
+}
