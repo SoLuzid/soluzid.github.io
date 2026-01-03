@@ -1,3 +1,3 @@
-the funny page
+the funny site
 yeah
 uwu
