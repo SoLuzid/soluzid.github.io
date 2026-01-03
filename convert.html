@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>dum bui lder un its  to mine carf bloks</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>dum bui lder un its  to mine carf bloks</h1>
+  <p>Turns Doom Builder units into Minecraft blocks ig</p>
+
+  <label for="direction">bleh</label><br>
+  <select id="direction">
+    <option value="doom-to-mc">doom builder units to mc   blocks</option>
+    <option value="mc-to-doom">the same thing but like, backwards ig</option>
+  </select>
+  <br><br>
+
+  <label for="value">put number here please</label><br>
+  <input id="value" type="number" value="128" step="any">
+  <br><br>
+
+  <label for="axis">orientation</label><br>
+  <select id="axis">
+    <option value="horizontal">Horizontal</option>
+    <option value="vertical">Vertical</option>
+  </select>
+  <br><br>
+
+  <input type="checkbox" id="roundUp"> <label for="roundUp">Round it up yay</label>
+  <br><br>
+
+  <button id="convert">Convert</button>
+  <button id="swap">spwap</button>
+  <br><br>
+
+  <div id="result">result here</div>
+  <pre id="formula">code thing idk</pre>
+
+  <script>
+    const valueEl = document.getElementById('value');
+    const axisEl = document.getElementById('axis');
+    const dirEl = document.getElementById('direction');
+    const resultEl = document.getElementById('result');
+    const formulaEl = document.getElementById('formula');
+    const convertBtn = document.getElementById('convert');
+    const swapBtn = document.getElementById('swap');
+    const roundUpEl = document.getElementById('roundUp');
+
+    function round(v){ return Math.round(v*10000)/10000; }
+
+    function convert(){
+      const val = parseFloat(valueEl.value) || 0;
+      const axis = axisEl.value;
+      const dir = dirEl.value;
+      const roundUp = roundUpEl.checked;
+
+      const doomPerFoot = axis === 'horizontal' ? 16 : 10;
+      const footToMeter = 0.3048;
+
+      if(dir === 'doom-to-mc'){
+        const feet = val / doomPerFoot;
+        const meters = feet * footToMeter;
+        let blocks = meters;
+        if(roundUp) blocks = Math.ceil(blocks);
+        resultEl.textContent = round(blocks) + ' Minecraft blocks (≈ ' + round(meters) + ' m)';
+        formulaEl.textContent = 'Formula: (doom_units / ' + doomPerFoot + ') * 0.3048\nExample: (' + val + ' / ' + doomPerFoot + ') * 0.3048 = ' + round(blocks);
+      } else {
+        const meters = val;
+        const feet = meters / footToMeter;
+        let doomUnits = feet * doomPerFoot;
+        if(roundUp) doomUnits = Math.ceil(doomUnits);
+        resultEl.textContent = round(doomUnits) + ' doom units (≈ ' + round(feet) + ' ft)';
+        formulaEl.textContent = 'Formula: (blocks / 0.3048) * ' + doomPerFoot + '\nExample: (' + val + ' / 0.3048) * ' + doomPerFoot + ' = ' + round(doomUnits);
+      }
+    }
+
+    convertBtn.addEventListener('click', convert);
+    valueEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter') convert(); });
+
+    swapBtn.addEventListener('click', ()=>{
+      if(dirEl.value === 'doom-to-mc') dirEl.value = 'mc-to-doom';
+      else dirEl.value = 'doom-to-mc';
+      convert();
+    });
+
+    convert();
+  </script>
+</body>
+</html>
