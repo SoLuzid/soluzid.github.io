@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Santa's Adventure Countdown</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<h1>Santa's Adventure</h1>
+
+<h2>Santa's Adventure 1</h2>
+<p>25 December 2025</p>
+<p>released</p>
+
+<h2>Santa's Adventure 2</h2>
+<p>Indefinite Hiatus</p>
+<p id="c2">loading...</p>
+
+<script>
+function countdown(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const now = Date.now();
+    let diff = target - now;
+
+    if (diff <= 0) {
+        el.textContent = "now";
+        return;
+    }
+
+    const sec = Math.floor(diff / 1000);
+
+    const years = Math.floor(sec / 31536000);
+    let rem = sec % 31536000;
+
+    const days = Math.floor(rem / 86400);
+    rem %= 86400;
+
+    const hours = Math.floor(rem / 3600);
+    rem %= 3600;
+
+    const mins = Math.floor(rem / 60);
+    const secs = rem % 60;
+
+    el.textContent =
+        years + " years " +
+        days + " days " +
+        hours + " hours " +
+        mins + " minutes " +
+        secs + " seconds";
+}
+
+/* SA2: completely bogus far-future date */
+const d2 = new Date(9999, 11, 25, 0, 0, 0).getTime();
+
+setInterval(() => {
+    countdown("c2", d2);
+}, 1000);
+</script>
+
+</body>
+</html>
