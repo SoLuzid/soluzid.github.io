@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Bad Apple-fier</title>
+<style>
+  body {
+    background-color: #111;
+    color: #eee;
+    text-align: center;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  canvas {
+    display: block;
+    margin: 0 auto;
+  }
+  #subtitle {
+    margin-top: -50px;
+    font-size: 24px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: gold;
+    text-shadow: 2px 2px 6px #000;
+    background: rgba(0,0,0,0.5);
+    pointer-events: none;
+  }
+  input, button, label, select {
+    margin: 5px;
+  }
+</style>
+</head>
+<body>
+<h2>Bad Apple-fier</h2>
+<p>It turns your image into Bad Apple or something.</p>
+
+<input type="file" id="upload" accept="image/*"><br>
+<button id="startBtn">Start</button>
+
+<label for="lyricsSelect">Lyrics:</label>
+<select id="lyricsSelect">
+  <option value="none">No Lyrics</option>
+  <option value="jp">Original Japanese Lyrics</option>
+  <option value="en">English Lyrics</option>
+</select>
+<br><br>
+
+<canvas id="canvas"></canvas>
+<div id="subtitle"></div>
+<audio id="music" src="badapple.mp3"></audio>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const upload = document.getElementById('upload');
+const startBtn = document.getElementById('startBtn');
+const music = document.getElementById('music');
+const lyricsSelect = document.getElementById('lyricsSelect');
+const subtitleDiv = document.getElementById('subtitle');
+
+const threshold = 50;
+const totalFrames = 6572;
+const pixelSize = 16;
+const duration = 217;
+
+let uploadedImg = null;
+let running = false;
+let subtitles = [];
+let currentLyrics = "none";
+
+upload.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    uploadedImg = new Image();
+    uploadedImg.onload = () => console.log("Uploaded image ready!");
+    uploadedImg.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+lyricsSelect.addEventListener('change', () => {
+  const value = lyricsSelect.value;
+  currentLyrics = value;
+  subtitles = [];
+  subtitleDiv.innerHTML = '';
+
+  if (value === "jp") {
+    loadSRT('bad_apple.srt');
+  } else if (value === "en") {
+    loadSRT('bad_apple_en.srt');
+  }
+});
+
+function loadSRT(file) {
+  fetch(file)
+    .then(resp => resp.text())
+    .then(parseSRT)
+    .catch(err => console.error("Failed to load subtitles:", err));
+}
+
+function parseSRT(data) {
+  const lines = data.split(/\r?\n/);
+  subtitles = [];
+  let i = 0;
+  while (i < lines.length) {
+    if (!lines[i].trim()) { i++; continue; }
+    i++;
+    const time = lines[i++].trim();
+    const textLines = [];
+    while (i < lines.length && lines[i].trim()) {
+      textLines.push(lines[i++].trim());
+    }
+    const [start, end] = time.split(' --> ').map(t => srtTimeToSeconds(t));
+    subtitles.push({start, end, text: textLines.join('<br>')});
+  }
+}
+
+function srtTimeToSeconds(s) {
+  const m = s.match(/(\d+):(\d+):(\d+),(\d+)/);
+  if (!m) return 0;
+  return parseInt(m[1])*3600 + parseInt(m[2])*60 + parseInt(m[3]) + parseInt(m[4])/1000;
+}
+
+startBtn.addEventListener('click', () => {
+  if (!uploadedImg) return alert('Please upload an image first!');
+  running = !running;
+  startBtn.textContent = running ? "Stop" : "Start";
+
+  if (running) {
+    music.play();
+    requestAnimationFrame(animateFrame);
+  } else {
+    music.pause();
+  }
+});
+
+function animateFrame() {
+  if (!running) return;
+
+  const currentTime = music.currentTime;
+  let frameIndex = Math.floor((currentTime / duration) * totalFrames) + 1;
+  if (frameIndex > totalFrames) frameIndex = totalFrames;
+
+  const frameNum = String(frameIndex).padStart(4,'0');
+  const refImg = new Image();
+  refImg.crossOrigin = "anonymous";
+  refImg.src = `images/output_${frameNum}.jpg`;
+
+  refImg.onload = () => {
+    if (canvas.width !== refImg.width || canvas.height !== refImg.height) {
+      canvas.width = refImg.width;
+      canvas.height = refImg.height;
+    }
+
+    const tempRefCanvas = document.createElement('canvas');
+    tempRefCanvas.width = canvas.width;
+    tempRefCanvas.height = canvas.height;
+    const tempRefCtx = tempRefCanvas.getContext('2d');
+    tempRefCtx.drawImage(refImg, 0, 0);
+    const refData = tempRefCtx.getImageData(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let y = 0; y < canvas.height; y += pixelSize) {
+      for (let x = 0; x < canvas.width; x += pixelSize) {
+        const i = (y * canvas.width + x) * 4;
+        const r = refData.data[i];
+        const g = refData.data[i+1];
+        const b = refData.data[i+2];
+        const brightness = (r+g+b)/3;
+
+        if (brightness <= threshold) {
+          const alpha = 1 - (brightness / threshold);
+          ctx.globalAlpha = alpha;
+          ctx.drawImage(uploadedImg, x, y, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    ctx.globalAlpha = 1;
+
+    if (currentLyrics !== "none" && subtitles.length) {
+      const line = subtitles.find(s => currentTime >= s.start && currentTime <= s.end);
+      subtitleDiv.innerHTML = line ? line.text : '';
+    } else {
+      subtitleDiv.innerHTML = '';
+    }
+
+    requestAnimationFrame(animateFrame);
+  };
+
+  refImg.onerror = () => {
+    requestAnimationFrame(animateFrame);
+  };
+}
+</script>
+</body>
+</html>
