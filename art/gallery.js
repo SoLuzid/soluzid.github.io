@@ -1,6 +1,6 @@
 const artList = [
   {
-    page: "Beach.html",
+    page: "beach.html",
     date: "2025-12-26 12:34",
     description: "first art that I'm not posting on Twitter, just a simple remake of beach day",
     preview: "beach.png"
@@ -13,7 +13,7 @@ const artList = [
     folder: "pixel art"
   },
   {
-    page: "xitrarobotarm.html",
+    page: "Xitrarobotarm.html",
     date: "2026-01-03 19:27",
     description: "Xitra never shows her robotic arm. so i forced her to show it",
     preview: "xitrasarm.png",
