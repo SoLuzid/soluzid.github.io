@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art</title>
+
+    <link href="/style.css" rel="stylesheet">
+    <link href="art.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <main class="art-container">
+      <img id="artImage" alt="art">
+      <p id="artCaption" class="art-caption"></p>
+    </main>
+
+    <script src="art-data.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+
+      if (!id || !ART_DATA[id]) {
+        document.title = "Art not found";
+        document.getElementById("artCaption").textContent = "art not found";
+        throw new Error("Invalid art id");
+      }
+
+      const art = ART_DATA[id];
+
+      document.title = art.title;
+
+      const img = document.getElementById("artImage");
+      img.src = art.image;
+      img.className = "art-image";
+
+      document.getElementById("artCaption").textContent = art.caption;
+    </script>
+  </body>
+</html>
