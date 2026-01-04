@@ -22,3 +22,4 @@ const ART_DATA = {
     folder: "silly :3"
   }
 };
+const FOLDER_DATA = {};
