@@ -10,7 +10,20 @@ const gameList = [
       "0.2: Fixed mobile controls, made the bg nicer",
       "0.1: initial release"
     ]
-  }
+  },
+  {
+    page: "Santa's Adventure 2 web/index.html",
+    date: "2025-8-4 12:00",
+    title: "Santa's Adventure 2 demo",
+    version: "0.5.2",
+    description: "\"The Second game in the Santa's Adventure Saga. Each Xmas I’ll make a new Santa game, each one (hopefully) better than the last. the game's on indefinite hiatus, The entire demo is possible btw, Story: After returning home the elfs told him about Krampus's Presence and that it was causing chaos. Santa will go on another adventure to save the world from that demonic god. Controls: A and D to move, W to jump.\" - Gamejolt description i guess",
+    preview: "thumb/sa2demothumb.png",
+    changelog: [
+      "0.5.2: oh i remember this one, fixed a bug where i forgot to export the windows version with the update level 1 song. i am not fucking joking. this is a real reason of an update. how? well, i have no fucking idea.",
+      "0.5.1: tbh i dont remember what i did in this update",
+      "0.5: initial release"
+    ]
+  },
 ];
 
 const ICONS = {
