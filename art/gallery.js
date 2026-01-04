@@ -22,9 +22,9 @@ const artList = [
 ];
 
 const ICONS = {
-  folder: "/Icons/imageres_3.ico",
-  folderWithSub: "/Icons/imageres_162.ico",
-  back: "/Icons/imageres_185.ico"
+  folder: "/icons/imageres_3.ico",
+  folderWithSub: "/icons/imageres_162.ico",
+  back: "/icons/imageres_185.ico"
 };
 
 const gallery = document.getElementById("gallery");
