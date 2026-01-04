@@ -1,6 +1,6 @@
 const gameList = [
   {
-    page: "LaserDodge/index.html",
+    page: "Dodge Spinner/index.html",
     date: "2026-02-01 13:20",
     title: "Dodge Spinner",
     version: "0.2",
