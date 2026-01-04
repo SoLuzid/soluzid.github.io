@@ -16,25 +16,73 @@
     </main>
 
     <script src="art-data.js"></script>
-    <script>
+      <script>
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
+      const container = document.querySelector(".art-container");
+      const img = document.getElementById("artImage");
+      const caption = document.getElementById("artCaption");
 
       if (!id || !ART_DATA[id]) {
-        document.title = "Art not found";
-        document.getElementById("artCaption").textContent = "art not found";
+        container.innerHTML = "";
+
+        const wobbleTitle = document.createElement("h1");
+        wobbleTitle.id = "wobbleText";
+        wobbleTitle.style.fontSize = "60px";
+        wobbleTitle.textContent = "Art Not Found!!";
+        container.appendChild(wobbleTitle);
+
+        const msgEl = document.createElement("p");
+        msgEl.id = "randomMessage";
+        msgEl.style.fontSize = "25px";
+        container.appendChild(msgEl);
+
+        const textEl = wobbleTitle;
+        const text = textEl.textContent;
+        textEl.textContent = "";
+
+        const chars = [];
+        for (let i = 0; i < text.length; i++) {
+          const span = document.createElement("span");
+          span.className = "wobble-char";
+          span.textContent = text[i] === " " ? "\u00A0" : text[i];
+          textEl.appendChild(span);
+          chars.push(span);
+        }
+
+        function animate() {
+          const time = Date.now();
+          for (let i = 0; i < chars.length; i++) {
+            chars[i].style.transform = `translateY(${Math.sin((time/500) + i*0.6)*4}px)`;
+          }
+          requestAnimationFrame(animate);
+        }
+        animate();
+
+        const messages = [
+          "maybe you put the wrong URL? or this art hasn't been made yet. :3",
+          "you probably put the wrong URL or I forgot to add this art",
+          "wrong URL? or the art is missing...",
+          "this art was probably deleted, broken link, or wrong id :("
+        ];
+        msgEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+
+        const titles = [
+          "art has not been found :(",
+          "art not found :c",
+          "this art is missing :(",
+          "art not found!!"
+        ];
+        document.title = titles[Math.floor(Math.random() * titles.length)];
+
         throw new Error("Invalid art id");
       }
 
       const art = ART_DATA[id];
-
       document.title = art.title;
-
-      const img = document.getElementById("artImage");
       img.src = art.image;
       img.className = "art-image";
-
-      document.getElementById("artCaption").textContent = art.caption;
-    </script>
+      caption.textContent = art.caption;
+      </script>
   </body>
 </html>

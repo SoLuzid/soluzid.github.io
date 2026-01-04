@@ -27,9 +27,9 @@ const gameList = [
 ];
 
 const ICONS = {
-  folder: "/Icons/imageres_3.ico",
-  folderWithSub: "/Icons/imageres_162.ico",
-  back: "/Icons/imageres_185.ico"
+  folder: "/icons/Standard Folders/imagesres_3.ico",
+  folderWithSub: "/icons/Important Icons/Special Folders/162.ico",
+  back: "/icons/Important Icons/Special Folders/185.ico"
 };
 
 const list = document.getElementById("gameList");

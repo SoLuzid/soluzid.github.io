@@ -1,11 +1,12 @@
 const ICONS = {
-  folder: "/icons/imageres_3.ico",
-  folderWithSub: "/icons/imageres_162.ico",
-  back: "/icons/imageres_185.ico"
+  folder: "/icons/Standard Folders/imagesres_3.ico",
+  folderWithSub: "/icons/Important Icons/Special Folders/162.ico",
+  back: "/icons/Important Icons/Special Folders/185.ico"
 };
 
 const gallery = document.getElementById("gallery");
 let currentFolder = "";
+let skipWarning = false;
 
 function parseDate(str) {
   return new Date(str.replace(" ", "T"));
@@ -23,13 +24,43 @@ function getArtArray() {
 }
 
 function getFolders(list) {
-  const folders = new Set();
+  const folders = new Map();
   list.forEach(item => {
-    if (item.folder) {
-      folders.add(item.folder.split("/")[0]);
+    if (!item.folder) return;
+    const name = item.folder.split("/")[0];
+    if (!folders.has(name)) folders.set(name, { suggestive: false, customicon: null });
+
+    if (FOLDER_DATA[name]) {
+      folders.set(name, { ...folders.get(name), ...FOLDER_DATA[name] });
     }
   });
-  return [...folders];
+  return folders;
+}
+
+function showSuggestiveWarning(folderName, callback) {
+  const modal = document.createElement("div");
+  modal.style = `
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    display:flex; justify-content:center; align-items:center;
+    background-color: rgba(0,0,0,0.7); color:white; z-index:9999; text-align:center;
+  `;
+  modal.innerHTML = `
+    <div style="background:#333; padding:30px; border-radius:10px; max-width:400px;">
+      <p>Hey uh, these arts i made contain slightly suggestive content, so if you dont wanna see that then uh leave</p>
+      <button id="goBack" style="margin:10px;padding:5px 10px;">Go Back</button>
+      <button id="continue" style="margin:10px;padding:5px 10px;">Continue</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  modal.querySelector("#goBack").onclick = () => {
+    document.body.removeChild(modal);
+  };
+  modal.querySelector("#continue").onclick = () => {
+    skipWarning = true;
+    document.body.removeChild(modal);
+    callback();
+  };
 }
 
 function render(folder) {
@@ -38,7 +69,6 @@ function render(folder) {
 
   const artList = getArtArray();
 
-  // back button
   if (folder !== "") {
     const li = document.createElement("li");
     li.className = "folder";
@@ -56,9 +86,11 @@ function render(folder) {
     gallery.appendChild(li);
   }
 
+  const folders = getFolders(artList);
+
   // folders
   if (folder === "") {
-    getFolders(artList).forEach(name => {
+    folders.forEach((props, name) => {
       const hasSub = artList.some(
         i => i.folder && i.folder.startsWith(name + "/")
       );
@@ -67,14 +99,20 @@ function render(folder) {
       li.className = "folder";
 
       const img = document.createElement("img");
-      img.src = hasSub ? ICONS.folderWithSub : ICONS.folder;
+      img.src = props.customicon || (hasSub ? ICONS.folderWithSub : ICONS.folder);
 
       const span = document.createElement("span");
       span.textContent = name;
 
       li.appendChild(img);
       li.appendChild(span);
-      li.onclick = () => render(name);
+      li.onclick = () => {
+        if (props.suggestive && !skipWarning) {
+          showSuggestiveWarning(name, () => render(name));
+        } else {
+          render(name);
+        }
+      };
 
       gallery.appendChild(li);
     });
