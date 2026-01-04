@@ -23,21 +23,27 @@
         <!-- Set the background colour of the document -->
         <style>
             body {
-                background: #0;
+                background: #000;
                 color: #cccccc;
-                margin: 0px;
-                padding: 0px;
-                border: 0px;
+                margin: 0;
+                width: 100vw;
+                height: 100vh;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             canvas {
-                image-rendering: optimizeSpeed;
+                image-rendering: pixelated;
                 -webkit-interpolation-mode: nearest-neighbor;
                 -ms-touch-action: none;
                 touch-action: none;
                 margin: 0px;
                 padding: 0px;
                 border: 0px;
+                width: 960px;
+                height: 600px;
             }
             :-webkit-full-screen #canvas {
                 width: 100%;
@@ -50,9 +56,9 @@
             
             /* Custom Runner Styles */
             div.gm4html5_div_class {
-                margin: 0px;
-                padding: 0px;
-                border: 0px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             div.gm4html5_login {
                 padding: 20px;
