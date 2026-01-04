@@ -3,11 +3,97 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Not Found</title>
-    <link href="/styles.css" rel="stylesheet" type="text/css" media="all">
+    <title id="pageTitle">page has not been found :(</title>
+
+    <link href="/styles.css" rel="stylesheet">
+
+    <style>
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #f269bb;
+        color: black;
+      }
+
+      h1 {
+        display: inline-block;
+        white-space: nowrap;
+      }
+
+      .wobble-char {
+        display: inline-block;
+        will-change: transform;
+      }
+    </style>
   </head>
+
   <body>
-    <h1>Page Not Found</h1>
-    <p>:(</p>
+    <h1 id="wobbleText" style="font-size:60px;">Page Not Found!!</h1>
+    <p id="randomMessage" style="font-size:25px;">maybe you put the wrong URL? idk man. or probably the page has not been made, yet. idk just uh. sorry :3</p>
+
+    <script>
+      const textEl = document.getElementById("wobbleText");
+      const text = textEl.textContent;
+      textEl.textContent = "";
+
+      const chars = [];
+
+      for (let i = 0; i < text.length; i++) {
+        const span = document.createElement("span");
+        span.className = "wobble-char";
+        span.textContent = text[i] === " " ? "\u00A0" : text[i];
+        textEl.appendChild(span);
+        chars.push(span);
+      }
+
+      function animate() {
+        const time = Date.now();
+
+        for (let i = 0; i < chars.length; i++) {
+          const offsetY = Math.sin((time / 500) + i * 0.6) * 4;
+          chars[i].style.transform = `translateY(${offsetY}px)`;
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+      const messages = [
+        "maybe you put the wrong URL? idk man. or probably the page has not been made yet. idk just uh. sorry :3",
+        "maybe you put the wrong URL? idk man. or the page hasn’t been made yet. idk just uh. sorry :3",
+        "maybe you put the wrong URL? idk man. or the page is not made yet. idk just uh. sorry :3",
+        "maybe you put the wrong URL? idk man. or the page just hasn’t been made yet. sorry :3",
+        "you probably put the wrong URL or i forgot to add the page",
+        "you probably put the wrong URL, or i forgot to add the page",
+        "you put the wrong URL probably or i forgot to add the page",
+        "this page was probably deleted, you put the wrong url, or i am a dumbass and left a broken link",
+        "this page was probably deleted, or you put the wrong url, or i am a dumbass and left a broken link",
+        "this page was probably deleted, you put the wrong URL, or i am a dumbass and forgot to fix a broken link",
+        "wrong URL?",
+        "wrong URL maybe?",
+        "probably the wrong URL?",
+        "wrong url i think?"
+      ];
+
+      const msgEl = document.getElementById("randomMessage");
+      msgEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+      const titles = [
+        "page has not been found :(",
+        "page has not been found :(",
+        "page has not been found :c",
+        "page has not been found ):",
+        "page has not been found!!",
+        "page not found :(",
+        "page not found :c",
+        "this page is not found :(",
+        "this page was not found :("
+      ];
+
+      document.title = titles[Math.floor(Math.random() * titles.length)];
+    </script>
   </body>
 </html>
