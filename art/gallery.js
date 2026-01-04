@@ -1,7 +1,7 @@
 const ICONS = {
-  folder: "/icons/Standard_Folders/imagesres_3.ico",
-  folderWithSub: "/icons/Important_Icons/Special_Folders/162.ico",
-  back: "/icons/Important_Icons/Special_Folders/185.ico"
+  folder: "/icons/Standard_Folders/imageres_3.ico",
+  folderWithSub: "/icons/Important_Icons/Special_Folders/imageres_162.ico",
+  back: "/icons/Important_Icons/Special_Folders/imageres_185.ico"
 };
 
 const gallery = document.getElementById("gallery");
