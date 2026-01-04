@@ -8,10 +8,6 @@ body {
   font-family: Arial;
 }
 
-.badge {
-  width: 256px;      /* adjust to taste */
-  height: auto;    /* keeps aspect ratio */
-}
 
 #gallery li.folder img {
   width: 32px;

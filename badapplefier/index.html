@@ -3,33 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Bad Apple-fier</title>
-<style>
-  body {
-    background-color: #111;
-    color: #eee;
-    text-align: center;
-    font-family: sans-serif;
-    margin: 0;
-    padding: 20px;
-  }
-  canvas {
-    display: block;
-    margin: 0 auto;
-  }
-  #subtitle {
-    margin-top: -50px;
-    font-size: 24px;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    color: gold;
-    text-shadow: 2px 2px 6px #000;
-    background: rgba(0,0,0,0.5);
-    pointer-events: none;
-  }
-  input, button, label, select {
-    margin: 5px;
-  }
-</style>
+<link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
 <h2>Bad Apple-fier</h2>
 <p>It turns your image into Bad Apple or something.</p>
@@ -43,10 +19,12 @@
   <option value="jp">Original Japanese Lyrics</option>
   <option value="en">English Lyrics</option>
 </select>
+
 <br><br>
 
 <canvas id="canvas"></canvas>
 <div id="subtitle"></div>
+
 <audio id="music" src="badapple.mp3"></audio>
 
 <script>
