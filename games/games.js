@@ -22,7 +22,8 @@ const gameList = [
       "0.5.2: oh i remember this one, fixed a bug where i forgot to export the windows version with the update level 1 song. i am not fucking joking. this is a real reason of an update. how? well, i have no fucking idea.",
       "0.5.1: tbh i dont remember what i did in this update",
       "0.5: initial release"
-    ]
+    ],
+    folder: "Old Games i dont care about anymore :3"
   },
 ];
 
