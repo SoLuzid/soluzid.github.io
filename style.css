@@ -7,16 +7,3 @@ body {
   color: white;
   font-family: Arial;
 }
-
-
-#gallery li.folder img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-}
-
-#games li.folder img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-}
