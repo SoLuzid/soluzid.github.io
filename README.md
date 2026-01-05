@@ -1,7 +1,9 @@
-My Website!! <br>
-it's a cool site <br>
-i spent long on it <br>
-play games <br>
-see my cool art <br>
-use the stupid bad apple thing i decided to make <br>
-the site is rapidly updating cuz i wanna add cool new features ⌃-⌃
+# My Website!!  
+
+it's a cool site  
+i spent long on it  
+play games  
+see my cool art  
+use the stupid bad apple thing i decided to make  
+the site is rapidly updating cuz i wanna add cool new features ⌃-⌃  
+have fun :3  
