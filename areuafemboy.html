@@ -3,50 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Are You a Femboy?</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #111;
-        color: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .box {
-        background: #1e1e1e;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        width: 300px;
-    }
-    input {
-        width: 100%;
-        padding: 8px;
-        margin-top: 10px;
-        border-radius: 5px;
-        border: none;
-    }
-    button {
-        margin-top: 10px;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    #result {
-        margin-top: 15px;
-        font-size: 1.2em;
-    }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="box">
-    <h2>Are you a femboy based on your Twitter?</h2>
-    <input type="text" id="username" placeholder="Enter Twitter username">
-    <button onclick="check()">Check</button>
-    <div id="result">not a femboy</div>
-</div>
+
+<h2>Are you a femboy based on your Twitter?</h2>
+
+<input type="text" id="username" placeholder="Enter Twitter username">
+<button onclick="check()">Check</button>
+
+<div id="result"></div>
 
 <script>
 function check() {
@@ -60,5 +26,6 @@ function check() {
     }
 }
 </script>
+
 </body>
 </html>
