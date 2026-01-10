@@ -20,6 +20,13 @@ const ART_DATA = {
     date: "2026-01-03 19:27",
     caption: "Xitra never shows her robotic arm. so i forced her to show it",
     folder: "silly :3"
+  },
+  weirdcreature: {
+    title: "Stupid Weird Creature",
+    image: "weird creature.png",
+    date: "2026-01-10 02:57",
+    caption: "weird ass creature i made in 2023, decided to redraw it so see how much i have improved",
+    folder: "pixel art"
   }
 };
 const FOLDER_DATA = {};

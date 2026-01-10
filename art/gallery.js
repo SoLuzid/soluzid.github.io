@@ -28,7 +28,9 @@ function getFolders(list) {
   list.forEach(item => {
     if (!item.folder) return;
     const name = item.folder.split("/")[0];
-    if (!folders.has(name)) folders.set(name, { suggestive: false, customicon: null });
+    if (!folders.has(name)) {
+      folders.set(name, { warning: false, warningtext: "", customicon: null });
+    }
 
     if (FOLDER_DATA[name]) {
       folders.set(name, { ...folders.get(name), ...FOLDER_DATA[name] });
@@ -37,7 +39,7 @@ function getFolders(list) {
   return folders;
 }
 
-function showSuggestiveWarning(folderName, callback) {
+function showWarning(text, callback) {
   const modal = document.createElement("div");
   modal.style = `
     position: fixed; top:0; left:0; width:100%; height:100%;
@@ -46,7 +48,7 @@ function showSuggestiveWarning(folderName, callback) {
   `;
   modal.innerHTML = `
     <div style="background:#333; padding:30px; border-radius:10px; max-width:400px;">
-      <p>Hey uh, these arts i made contain slightly suggestive content, so if you dont wanna see that then uh leave</p>
+      <p>${text}</p>
       <button id="goBack" style="margin:10px;padding:5px 10px;">Go Back</button>
       <button id="continue" style="margin:10px;padding:5px 10px;">Continue</button>
     </div>
@@ -62,6 +64,9 @@ function showSuggestiveWarning(folderName, callback) {
     callback();
   };
 }
+
+const DEFAULT_WARNING_TEXT =
+  "Hey uh, these arts i made contain slightly suggestive content, so if you dont wanna see that then uh leave";
 
 function render(folder) {
   clearGallery();
@@ -107,8 +112,8 @@ function render(folder) {
       li.appendChild(img);
       li.appendChild(span);
       li.onclick = () => {
-        if (props.suggestive && !skipWarning) {
-          showSuggestiveWarning(name, () => render(name));
+        if (props.warning && !skipWarning) {
+          showWarning(props.warningtext || DEFAULT_WARNING_TEXT, () => render(name));
         } else {
           render(name);
         }
