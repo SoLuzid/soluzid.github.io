@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Swap!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #121213;
+        color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    #game {
+        text-align: center;
+        position: relative;
+        width: 100%;
+        max-width: 980px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        margin-bottom: 6px;
+    }
+
+    #topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 14px;
+        color: #d7dadc;
+        margin-bottom: 8px;
+    }
+
+    #target {
+        margin-bottom: 14px;
+        font-size: 18px;
+        letter-spacing: 3px;
+        color: #d7dadc;
+    }
+
+    #letters {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        transform-origin: center top;
+        transition: transform 0.12s ease;
+        will-change: transform;
+    }
+
+    .letter {
+        position: relative;
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+        border-radius: 6px;
+        background: #3a3a3c;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        transition: transform 0.2s ease, background 0.25s ease, box-shadow 0.2s ease;
+    }
+
+    .letter.correct {
+        background: #538d4e;
+    }
+
+    .letter.selected {
+        background: #b59f3b;
+        transform: translateY(-10px);
+    }
+
+    .letter.swap-target {
+        box-shadow: 0 0 0 3px #b59f3b inset;
+    }
+
+    .letter.correct::after {
+        content: "✓";
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        font-size: 12px;
+    }
+
+    .letter.selected::after {
+        content: "◇";
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        font-size: 12px;
+    }
+
+    .letter.solved {
+        animation: pop 0.3s ease;
+    }
+
+    @keyframes pop {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.15);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(120vh);
+            opacity: 0;
+        }
+    }
+
+    .letter.gameover {
+        background: #b3261e;
+        animation: fall 0.9s ease-in forwards;
+    }
+
+    #menu.fadein {
+        animation: menuFade 0.4s ease-in;
+    }
+
+    @keyframes menuFade {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    #loading {
+        position: absolute;
+        inset: 0;
+        background: rgba(18, 18, 19, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        visibility: hidden;
+    }
+
+    #spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #3a3a3c;
+        border-top: 4px solid #ffffff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    #menu {
+        position: absolute;
+        inset: 0;
+        background: #121213;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        z-index: 20;
+    }
+
+    button {
+        background: #3a3a3c;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background: #565758;
+    }
+
+    @media (max-width: 700px) {
+        .letter {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+        }
+
+        #topbar { font-size: 13px; gap: 8px; }
+        #game { padding: 12px; }
+    }
+
+    @media (max-width: 420px) {
+        .letter { width: 36px; height: 36px; line-height: 36px; font-size: 18px; }
+        #target { font-size: 16px; letter-spacing: 2px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="game">
+    <div id="menu">
+        <h1>Swap!</h1>
+        <div id="hiscoreMenu">High Score: 0</div>
+        <button id="startBtn">Start</button>
+    </div>
+
+    <h1>Swap!</h1>
+    <div id="topbar">
+        <div id="time">15:00</div>
+        <div id="score">Score: 0</div>
+        <div id="hiscore">Best: 0</div>
+    </div>
+    <div id="target"></div>
+    <div id="letters"></div>
+    <div id="loading"><div id="spinner"></div></div>
+</div>
+
+<audio id="ding" src="ding.mp3" preload="auto"></audio>
+<audio id="countdown" src="M_COUNTD.MP3" preload="auto" loop></audio>
+
+<script>
+    let wordQueue = [];
+    let wordSet = new Set();
+    let localWords = [];
+    let original = "";
+    let current = [];
+    let selectedIndex = null;
+    let loading = false;
+    let loadingLocal = false;
+
+    let totalTime = 5 * 60;
+    let timeLeft = totalTime;
+    let timerInterval = null;
+    let score = 0;
+    let highScore = parseInt(localStorage.getItem("swap_highscore") || "0");
+    let gameActive = false;
+
+    let audioCtx = null;
+    let countdownSource = null;
+    let countdownGain = null;
+    let countdownUrl = null;
+    let countdownBuffer = null;
+    let countdownBufferSource = null;
+    let resizeTimeout = null;
+
+    function setupAudio() {
+        try {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const cd = document.getElementById("countdown");
+            countdownSource = audioCtx.createMediaElementSource(cd);
+            countdownGain = audioCtx.createGain();
+            countdownGain.gain.value = 1;
+            countdownSource.connect(countdownGain).connect(audioCtx.destination);
+            countdownUrl = cd.src;
+        } catch (e) {
+            audioCtx = null;
+            countdownSource = null;
+            countdownGain = null;
+        }
+    }
+
+    function pitchDownAndFade(duration = 1200) {
+        const cd = document.getElementById("countdown");
+        if (!cd) return Promise.resolve();
+        const endRate = 0.5;
+
+        if (audioCtx) {
+            try { cd.pause(); } catch (e) {}
+
+            function scheduleBufferPlay(buffer) {
+                if (countdownBufferSource) {
+                    try { countdownBufferSource.stop(); } catch (e) {}
+                    try { countdownBufferSource.disconnect(); } catch (e) {}
+                    countdownBufferSource = null;
+                }
+
+                const src = audioCtx.createBufferSource();
+                src.buffer = buffer;
+                src.loop = true;
+                const g = audioCtx.createGain();
+                g.gain.setValueAtTime(1, audioCtx.currentTime);
+                src.connect(g).connect(audioCtx.destination);
+                src.playbackRate.setValueAtTime(1, audioCtx.currentTime);
+                src.start();
+                countdownBufferSource = src;
+
+                const now = audioCtx.currentTime;
+                try { src.playbackRate.linearRampToValueAtTime(endRate, now + duration / 1000); } catch (e) {}
+                try { g.gain.linearRampToValueAtTime(0, now + duration / 1000); } catch (e) {}
+
+                setTimeout(() => {
+                    try { src.stop(); } catch (e) {}
+                    try { src.disconnect(); } catch (e) {}
+                    try { g.disconnect(); } catch (e) {}
+                    countdownBufferSource = null;
+                    try { cd.currentTime = 0; cd.playbackRate = 1; } catch (e) {}
+                    resolvePromise();
+                }, duration + 50);
+            }
+
+            let resolvePromise;
+            const p = new Promise(resolve => { resolvePromise = resolve; });
+
+            if (countdownBuffer) {
+                scheduleBufferPlay(countdownBuffer);
+                return p;
+            }
+
+            fetch(countdownUrl)
+                .then(r => r.arrayBuffer())
+                .then(ab => audioCtx.decodeAudioData(ab))
+                .then(buf => { countdownBuffer = buf; scheduleBufferPlay(buf); })
+                .catch(() => {
+                    const startRate = cd.playbackRate || 1;
+                    const start = performance.now();
+                    requestAnimationFrame(function frame(t) {
+                        const prog = Math.min(1, (t - start) / duration);
+                        cd.playbackRate = startRate + (endRate - startRate) * prog;
+                        if (prog < 1) requestAnimationFrame(frame);
+                        else { try { cd.pause(); cd.currentTime = 0; } catch (e) {}; cd.playbackRate = 1; resolvePromise && resolvePromise(); }
+                    });
+                });
+
+            return p;
+        }
+
+        const startRate = cd.playbackRate || 1;
+        const start = performance.now();
+        return new Promise(resolve => {
+            function frame(t) {
+                const p = Math.min(1, (t - start) / duration);
+                cd.playbackRate = startRate + (endRate - startRate) * p;
+                if (p < 1) requestAnimationFrame(frame);
+                else { try { cd.pause(); cd.currentTime = 0; } catch (e) {}; cd.playbackRate = 1; resolve(); }
+            }
+            requestAnimationFrame(frame);
+        });
+    }
+
+    function showLoading(show) {
+        document.getElementById("loading").style.visibility = show ? "visible" : "hidden";
+    }
+
+    function updateTopbar() {
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        document.getElementById("time").textContent = `${m}:${s.toString().padStart(2, "0")}`;
+        document.getElementById("score").textContent = "Score: " + score;
+        document.getElementById("hiscore").textContent = "Best: " + highScore;
+        document.getElementById("hiscoreMenu").textContent = "High Score: " + highScore;
+    }
+
+    function startCountdown() {
+        clearInterval(timerInterval);
+        timeLeft = totalTime;
+        setupAudio();
+        const cd = document.getElementById("countdown");
+        cd.currentTime = 0;
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+        try { cd.play(); } catch (e) {}
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTopbar();
+            if (timeLeft <= 0) endGame();
+        }, 1000);
+    }
+
+    function endGame() {
+        clearInterval(timerInterval);
+        gameActive = false;
+        const cd = document.getElementById("countdown");
+        try { pitchDownAndFade(1200); } catch (e) { try { cd.pause(); cd.currentTime = 0; } catch (e) {} }
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem("swap_highscore", highScore);
+        }
+        const tiles = document.querySelectorAll(".letter");
+        tiles.forEach((t, i) => {
+            t.classList.remove("selected", "swap-target", "correct");
+            t.classList.add("gameover");
+            t.style.animationDelay = (i * 20) + "ms";
+        });
+        setTimeout(() => {
+            document.getElementById("target").textContent = "";
+            document.getElementById("letters").innerHTML = "";
+            const menu = document.getElementById("menu");
+            menu.classList.add("fadein");
+            menu.style.display = "flex";
+        }, 1000);
+    }
+
+    async function fetchWords(count = 150) {
+        if (loading) return;
+        loading = true;
+        showLoading(true);
+
+        const res = await fetch(`https://random-word-api.herokuapp.com/word?number=${count}`);
+        const data = await res.json();
+        data.forEach(w => addWord(w));
+
+        loading = false;
+        showLoading(false);
+    }
+
+    async function loadLocalWords() {
+        try {
+            loadingLocal = true;
+            const res = await fetch("randomwords.txt");
+            if (!res.ok) return;
+            const text = await res.text();
+            const lines = text
+                .split(/\r?\n/)
+                .map(w => w.replace(/\s+/g, ' ').trim().toUpperCase())
+                .filter(w => /^[A-Z ]+$/.test(w));
+            localWords = Array.from(new Set(lines));
+        } catch (e) {
+        } finally {
+            loadingLocal = false;
+        }
+    }
+
+    function addWord(w) {
+        w = w.replace(/\s+/g, ' ').trim().toUpperCase();
+        if (!/^[A-Z ]+$/.test(w)) return;
+        if (w.length >= 4 && w.length <= 30 && !wordSet.has(w)) {
+            wordQueue.push(w);
+            wordSet.add(w);
+        }
+    }
+
+    function pickLocalWord() {
+        if (localWords.length === 0) return null;
+        const i = Math.floor(Math.random() * localWords.length);
+        return localWords.splice(i, 1)[0];
+    }
+
+    function intenseScramble(word) {
+        let arr = word.split("");
+        let swaps = word.length * word.length * 3;
+        for (let i = 0; i < swaps; i++) {
+            let j = Math.floor(Math.random() * (arr.length - 1));
+            [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+        }
+        if (arr.join("") === word) return intenseScramble(word);
+        return arr;
+    }
+
+    function render() {
+        const container = document.getElementById("letters");
+        container.innerHTML = "";
+        current.forEach((char, i) => {
+            const div = document.createElement("div");
+            let classes = "letter";
+            if (char === original[i]) classes += " correct";
+            if (i === selectedIndex) classes += " selected";
+            if (selectedIndex !== null && Math.abs(selectedIndex - i) === 1) classes += " swap-target";
+            div.className = classes;
+            div.textContent = char === ' ' ? '\u00A0' : char;
+            div.onclick = (e) => { e.stopPropagation(); clickLetter(i); };
+            container.appendChild(div);
+        });
+
+        requestAnimationFrame(() => {
+            const parent = document.getElementById("game");
+            const available = Math.min(window.innerWidth * 0.92, parent.clientWidth - 20 || window.innerWidth * 0.92);
+            const contentW = container.scrollWidth;
+            let scale = 1;
+            if (contentW > available && contentW > 0) scale = available / contentW;
+            container.style.transform = `scale(${scale})`;
+        });
+    }
+
+    function animateSwap(i, j) {
+        const letters = document.querySelectorAll(".letter");
+        const a = letters[i];
+        const b = letters[j];
+        const distance = a.offsetWidth + 8;
+        a.style.transform = `translateX(${(j - i) * distance}px)`;
+        b.style.transform = `translateX(${(i - j) * distance}px)`;
+        setTimeout(() => {
+            [current[i], current[j]] = [current[j], current[i]];
+            selectedIndex = null;
+            render();
+            checkWin();
+        }, 200);
+    }
+
+    function deselect() {
+        if (!gameActive) return;
+        selectedIndex = null;
+        render();
+    }
+
+    function clickLetter(index) {
+        if (!gameActive) return;
+        if (selectedIndex === null) { selectedIndex = index; render(); return; }
+        if (Math.abs(selectedIndex - index) === 1) { animateSwap(selectedIndex, index); return; }
+        deselect();
+    }
+
+    function checkWin() {
+        if (current.join("") === original) {
+            document.getElementById("ding").currentTime = 0;
+            document.getElementById("ding").play();
+            document.querySelectorAll(".letter").forEach(t => t.classList.add("solved"));
+            score++;
+            updateTopbar();
+            setTimeout(nextWord, 700);
+        }
+    }
+
+    function nextWord() {
+        if (wordQueue.length < 30) fetchWords(150);
+        let useLocal = Math.random() < 0.35 && localWords.length > 0;
+        let candidate = useLocal ? pickLocalWord() : wordQueue.shift();
+        if (!candidate) {
+            fetchWords(150);
+            return;
+        }
+
+        if (candidate === original) {
+            let alt = null;
+            if (useLocal) {
+                if (wordQueue.length > 0) alt = wordQueue.shift();
+                if (!alt && localWords.length > 0) alt = pickLocalWord();
+            } else {
+                if (wordQueue.length > 0) alt = wordQueue.shift();
+                if (!alt && localWords.length > 0) alt = pickLocalWord();
+            }
+            if (alt) candidate = alt;
+        }
+
+        if (!candidate) {
+            fetchWords(150);
+            return;
+        }
+
+        if (wordSet.has(candidate)) wordSet.delete(candidate);
+        original = candidate;
+        current = intenseScramble(original);
+        selectedIndex = null;
+        document.getElementById("target").textContent = original;
+        render();
+    }
+
+    async function startGame() {
+        score = 0;
+        updateTopbar();
+        gameActive = true;
+        const menuEl = document.getElementById("menu");
+        menuEl.style.display = "none";
+        menuEl.classList.remove("fadein");
+        showLoading(true);
+        await loadLocalWords();
+        await fetchWords(150);
+        showLoading(false);
+        nextWord();
+        startCountdown();
+    }
+
+    updateTopbar();
+    document.getElementById("startBtn").onclick = startGame;
+    document.getElementById("letters").addEventListener("click", deselect);
+    document.body.addEventListener("click", deselect);
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => render(), 120);
+    });
+</script>
+
+</body>
+</html>
