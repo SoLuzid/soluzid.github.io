@@ -17,7 +17,7 @@ const gameList = [
     title: "Swap!",
     version: "1.0.0",
     description: "You are given scrambled words that you have to unscramble by swapping letters by the ones on their sides. you have 5 minutes to get as much score as you possibly can. im not sure if you can get more than 40 solved words tbh",
-    preview: "no thumbnail sorry i forgot to make one and im lazy :(",
+    preview: null,
     changelog: [
       "1.0.0: First non-beta Release. added just a new logo, that's all. that's all this damn update added. that's all. really.",
       "0.9.0: Original Beta Release. literally added the whole game itself"
