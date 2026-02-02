@@ -213,18 +213,56 @@
         .letter { width: 36px; height: 36px; line-height: 36px; font-size: 18px; }
         #target { font-size: 16px; letter-spacing: 2px; }
     }
+    .swap-logo {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    }
+
+    .swap-logo-tile {
+        width: 42px;
+        height: 42px;
+        line-height: 42px;
+        border-radius: 6px;
+        background: #3a3a3c;
+        color: #fff;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        user-select: none;
+        animation: logoPop 0.4s ease;
+    }
+
+    .swap-logo-tile.correct {
+        background: #538d4e;
+    }
+
+    @keyframes logoPop {
+        0%   { transform: scale(0.9); }
+        60%  { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    @media (max-width: 500px) {
+        .swap-logo-tile {
+            width: 34px;
+            height: 34px;
+            line-height: 34px;
+            font-size: 18px;
+        }
+    }
 </style>
 </head>
 <body>
 
 <div id="game">
     <div id="menu">
-        <h1>Swap!</h1>
+        <div class="swap-logo" id="swapLogo"><h1>Swap!</h1></div>
         <div id="hiscoreMenu">High Score: 0</div>
         <button id="startBtn">Start</button>
     </div>
 
-    <h1>Swap!</h1>
     <div id="topbar">
         <div id="time">15:00</div>
         <div id="score">Score: 0</div>
@@ -579,7 +617,27 @@
         startCountdown();
     }
 
+    function renderLogo() {
+        const text = "SWAP!";
+        const logo = document.getElementById("swapLogo");
+        logo.innerHTML = "";
+
+        [...text].forEach(char => {
+            const tile = document.createElement("div");
+            tile.className = "swap-logo-tile";
+            tile.textContent = char;
+
+            if (Math.random() < Math.random()) {
+                tile.classList.add("correct");
+            }
+
+            logo.appendChild(tile);
+        });
+    }
+
+
     updateTopbar();
+    renderLogo();
     document.getElementById("startBtn").onclick = startGame;
     document.getElementById("letters").addEventListener("click", deselect);
     document.body.addEventListener("click", deselect);
