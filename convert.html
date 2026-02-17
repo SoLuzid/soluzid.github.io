@@ -1,42 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>dum bui lder un its  to mine carf bloks</title>
-  <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>doom units ↔ mc blocks</title>
+  <link href="style.css" rel="stylesheet">
+
+  <style>
+
+    .container {
+      max-width: 720px;
+      margin: 24px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    label { color: #e8d6ff; }
+    p { color: #ccccff; }
+
+    input, select, button {
+      background: #1f1f3a;
+      color: #ffffff;
+      border: 1px solid #444;
+      padding: 6px 10px;
+      margin-top: 4px;
+    }
+
+    button:hover {
+      background: #2c2c44;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 16px;
+      color: #ffd6f3;
+      font-weight: bold;
+    }
+
+    pre {
+      margin-top: 12px;
+      text-align: left;
+      background: #141428;
+      padding: 12px;
+      border: 1px solid #444;
+      color: #ccccff;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>dum bui lder un its  to mine carf bloks</h1>
-  <p>Turns Doom Builder units into Minecraft blocks ig</p>
+  <script src="/header.js"></script>
 
-  <label for="direction">bleh</label><br>
-  <select id="direction">
-    <option value="doom-to-mc">doom builder units to mc   blocks</option>
-    <option value="mc-to-doom">the same thing but like, backwards ig</option>
-  </select>
-  <br><br>
+  <div class="container">
+    <select id="direction">
+      <option value="doom-to-mc">doom → mc</option>
+      <option value="mc-to-doom">mc → doom</option>
+    </select>
 
-  <label for="value">put number here please</label><br>
-  <input id="value" type="number" value="128" step="any">
-  <br><br>
+    <br><br>
 
-  <label for="axis">orientation</label><br>
-  <select id="axis">
-    <option value="horizontal">Horizontal</option>
-    <option value="vertical">Vertical</option>
-  </select>
-  <br><br>
+    <input id="value" type="number" step="any">
 
-  <input type="checkbox" id="roundUp"> <label for="roundUp">Round it up yay</label>
-  <br><br>
+    <br><br>
 
-  <button id="convert">Convert</button>
-  <button id="swap">spwap</button>
-  <br><br>
+    <select id="axis">
+      <option value="horizontal">horizontal</option>
+      <option value="vertical">vertical</option>
+    </select>
 
-  <div id="result">result here</div>
-  <pre id="formula">code thing idk</pre>
+    <br><br>
+
+    <input type="checkbox" id="roundUp">
+    <label for="roundUp">round</label>
+
+    <br><br>
+
+    <button id="convert">convert</button>
+    <button id="swap">swap</button>
+
+    <div id="result"></div>
+    <pre id="formula"></pre>
+  </div>
 
   <script>
     const valueEl = document.getElementById('value');
@@ -48,9 +92,28 @@
     const swapBtn = document.getElementById('swap');
     const roundUpEl = document.getElementById('roundUp');
 
-    function round(v){ return Math.round(v*10000)/10000; }
+    function round(v) {
+      return Math.round(v * 10000) / 10000;
+    }
 
-    function convert(){
+    function readParams() {
+      const p = new URLSearchParams(location.search);
+      if (p.has('value')) valueEl.value = p.get('value');
+      if (p.has('dir')) dirEl.value = p.get('dir');
+      if (p.has('axis')) axisEl.value = p.get('axis');
+      if (p.get('round') === '1') roundUpEl.checked = true;
+    }
+
+    function writeParams() {
+      const p = new URLSearchParams();
+      p.set('value', valueEl.value);
+      p.set('dir', dirEl.value);
+      p.set('axis', axisEl.value);
+      if (roundUpEl.checked) p.set('round', '1');
+      history.replaceState(null, '', '?' + p.toString());
+    }
+
+    function convert() {
       const val = parseFloat(valueEl.value) || 0;
       const axis = axisEl.value;
       const dir = dirEl.value;
@@ -59,32 +122,35 @@
       const doomPerFoot = axis === 'horizontal' ? 16 : 10;
       const footToMeter = 0.3048;
 
-      if(dir === 'doom-to-mc'){
-        const feet = val / doomPerFoot;
-        const meters = feet * footToMeter;
+      if (dir === 'doom-to-mc') {
+        const meters = (val / doomPerFoot) * footToMeter;
         let blocks = meters;
-        if(roundUp) blocks = Math.ceil(blocks);
-        resultEl.textContent = round(blocks) + ' Minecraft blocks (≈ ' + round(meters) + ' m)';
-        formulaEl.textContent = 'Formula: (doom_units / ' + doomPerFoot + ') * 0.3048\nExample: (' + val + ' / ' + doomPerFoot + ') * 0.3048 = ' + round(blocks);
+        if (roundUp) blocks = Math.ceil(blocks);
+        resultEl.textContent = round(blocks) + ' blocks';
+        formulaEl.textContent = '(' + val + ' / ' + doomPerFoot + ') * 0.3048';
       } else {
-        const meters = val;
-        const feet = meters / footToMeter;
+        const feet = val / footToMeter;
         let doomUnits = feet * doomPerFoot;
-        if(roundUp) doomUnits = Math.ceil(doomUnits);
-        resultEl.textContent = round(doomUnits) + ' doom units (≈ ' + round(feet) + ' ft)';
-        formulaEl.textContent = 'Formula: (blocks / 0.3048) * ' + doomPerFoot + '\nExample: (' + val + ' / 0.3048) * ' + doomPerFoot + ' = ' + round(doomUnits);
+        if (roundUp) doomUnits = Math.ceil(doomUnits);
+        resultEl.textContent = round(doomUnits) + ' units';
+        formulaEl.textContent = '(' + val + ' / 0.3048) * ' + doomPerFoot;
       }
+
+      writeParams();
     }
 
     convertBtn.addEventListener('click', convert);
-    valueEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter') convert(); });
+    valueEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') convert();
+    });
 
-    swapBtn.addEventListener('click', ()=>{
-      if(dirEl.value === 'doom-to-mc') dirEl.value = 'mc-to-doom';
-      else dirEl.value = 'doom-to-mc';
+    swapBtn.addEventListener('click', () => {
+      dirEl.value = dirEl.value === 'doom-to-mc' ? 'mc-to-doom' : 'doom-to-mc';
       convert();
     });
 
+    readParams();
+    if (!valueEl.value) valueEl.value = 128;
     convert();
   </script>
 </body>

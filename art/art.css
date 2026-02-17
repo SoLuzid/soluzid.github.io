@@ -2,26 +2,28 @@
   text-align: center;
   padding: 1.5rem;
 }
-
 .art-image {
   width: auto;
   height: auto;
-
+  max-width: none;
+  max-height: none;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   -ms-interpolation-mode: nearest-neighbor;
+  border-radius: 8px;
 }
 
 .smallart-image {
   width: 70%;
   height: auto;
-
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   -ms-interpolation-mode: nearest-neighbor;
+  border-radius: 8px;
 }
-
-
 .art-caption {
   margin-top: 1rem;
+  color: #ccccff;
+  font-size: 1.1rem;
+  overflow: auto;
 }

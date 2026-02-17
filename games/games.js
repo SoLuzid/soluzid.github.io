@@ -48,8 +48,6 @@ const ICONS = {
 const list = document.getElementById("gameList");
 let currentFolder = "";
 
-/* ================= helpers ================= */
-
 function parseDate(str) {
   return new Date(str.replace(" ", "T"));
 }
@@ -61,113 +59,140 @@ function clearList() {
 function getFolders(listData) {
   const folders = new Set();
   listData.forEach(item => {
-    if (item.folder) {
-      folders.add(item.folder.split("/")[0]);
-    }
+    if (item.folder) folders.add(item.folder.split("/")[0]);
   });
   return [...folders];
 }
 
-/* ================= render ================= */
+function createCard(game) {
+  const li = document.createElement("li");
+  li.style.background = "#2c2c44";
+  li.style.padding = "16px";
+  li.style.border = "2px solid #444";
+  li.style.borderRadius = "12px";
+  li.style.textAlign = "left";
+
+  if (game.preview) {
+    const img = document.createElement("img");
+    img.src = game.preview;
+    img.alt = game.title + " preview";
+    img.style.maxWidth = "100%";
+    img.style.borderRadius = "8px";
+    img.style.display = "block";
+    img.style.marginBottom = "12px";
+    li.appendChild(img);
+  }
+
+  const link = document.createElement("a");
+  link.href = game.page;
+  link.textContent = game.title || game.page;
+  link.style.color = "#9db4ff";
+  link.style.fontWeight = "bold";
+  link.style.fontSize = "1.2em";
+  link.style.textDecoration = "none";
+  link.onmouseover = () => link.style.color = "#ffffff";
+  link.onmouseout = () => link.style.color = "#9db4ff";
+  li.appendChild(link);
+
+  const meta = document.createElement("div");
+  meta.textContent = `${game.date} — v${game.version}`;
+  meta.style.color = "#ccccff";
+  meta.style.marginTop = "8px";
+  li.appendChild(meta);
+
+  const desc = document.createElement("div");
+  desc.textContent = game.description;
+  desc.style.color = "#ccccff";
+  desc.style.marginTop = "8px";
+  li.appendChild(desc);
+
+  if (game.changelog?.length) {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.textContent = "Changelog";
+    summary.style.color = "#9db4ff";
+    summary.style.cursor = "pointer";
+    const ul = document.createElement("ul");
+    game.changelog.forEach(entry => {
+      const liEntry = document.createElement("li");
+      liEntry.textContent = entry;
+      liEntry.style.color = "#ccccff";
+      ul.appendChild(liEntry);
+    });
+    details.append(summary, ul);
+    li.appendChild(details);
+  }
+
+  return li;
+}
 
 function render(folder = "") {
   clearList();
   currentFolder = folder;
 
-  /* back button */
   if (folder !== "") {
     const li = document.createElement("li");
     li.className = "folder";
+    li.style.cursor = "pointer";
+    li.style.display = "flex";
+    li.style.alignItems = "center";
+    li.style.background = "#1f1f3a";
+    li.style.padding = "8px 12px";
+    li.style.borderRadius = "8px";
+    li.style.marginBottom = "12px";
 
     const img = document.createElement("img");
     img.src = ICONS.back;
+    img.style.width = "32px";
+    img.style.height = "32px";
+    img.style.objectFit = "contain";
 
     const span = document.createElement("span");
     span.textContent = "..";
+    span.style.color = "#9db4ff";
+    span.style.fontWeight = "bold";
+    span.style.marginLeft = "8px";
 
     li.append(img, span);
     li.onclick = () => render("");
-
     list.appendChild(li);
   }
 
-  /* folders */
   if (folder === "") {
     getFolders(gameList).forEach(name => {
-      const hasSub = gameList.some(
-        g => g.folder && g.folder.startsWith(name + "/")
-      );
-
+      const hasSub = gameList.some(g => g.folder && g.folder.startsWith(name + "/"));
       const li = document.createElement("li");
       li.className = "folder";
+      li.style.cursor = "pointer";
+      li.style.display = "flex";
+      li.style.alignItems = "center";
+      li.style.background = "#1f1f3a";
+      li.style.padding = "8px 12px";
+      li.style.borderRadius = "8px";
+      li.style.marginBottom = "12px";
 
       const img = document.createElement("img");
       img.src = hasSub ? ICONS.folderWithSub : ICONS.folder;
+      img.style.width = "32px";
+      img.style.height = "32px";
+      img.style.objectFit = "contain";
 
       const span = document.createElement("span");
       span.textContent = name;
+      span.style.color = "#9db4ff";
+      span.style.fontWeight = "bold";
+      span.style.marginLeft = "8px";
 
       li.append(img, span);
       li.onclick = () => render(name);
-
       list.appendChild(li);
     });
   }
 
-  /* games */
   gameList
-    .filter(game =>
-      folder === ""
-        ? !game.folder
-        : game.folder === folder
-    )
+    .filter(game => folder === "" ? !game.folder : game.folder === folder)
     .sort((a, b) => parseDate(b.date) - parseDate(a.date))
-    .forEach(game => {
-      const li = document.createElement("li");
-
-      if (game.preview) {
-        const img = document.createElement("img");
-        img.src = game.preview;
-        img.alt = game.title + " preview";
-        img.style.maxWidth = "200px";
-        img.style.display = "block";
-        li.appendChild(img);
-      }
-
-      const link = document.createElement("a");
-      link.href = game.page;
-      link.textContent = game.title || game.page;
-      li.appendChild(link);
-
-      const meta = document.createElement("div");
-      meta.textContent = `${game.date} — v${game.version}`;
-      li.appendChild(meta);
-
-      const desc = document.createElement("div");
-      desc.textContent = game.description;
-      li.appendChild(desc);
-
-      /* changelog */
-      if (game.changelog?.length) {
-        const details = document.createElement("details");
-        const summary = document.createElement("summary");
-        summary.textContent = "Changelog";
-
-        const ul = document.createElement("ul");
-        game.changelog.forEach(entry => {
-          const liEntry = document.createElement("li");
-          liEntry.textContent = entry;
-          ul.appendChild(liEntry);
-        });
-
-        details.append(summary, ul);
-        li.appendChild(details);
-      }
-
-      list.appendChild(li);
-    });
+    .forEach(game => list.appendChild(createCard(game)));
 }
-
-/* ================= init ================= */
 
 render();

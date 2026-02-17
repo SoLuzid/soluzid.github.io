@@ -1,182 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Bad Apple-fier</title>
-<link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bad Apple-fier</title>
+  <link href="/style.css" rel="stylesheet">
+
+  <style>
+
+    .container {
+      max-width: 900px;
+      margin: 24px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    input, select, button {
+      background: #1f1f3a;
+      color: #ffffff;
+      border: 1px solid #444;
+      padding: 6px 10px;
+      margin: 6px;
+    }
+
+    button:hover {
+      background: #2c2c44;
+      cursor: pointer;
+    }
+
+    canvas {
+      display: block;
+      margin: 16px auto;
+      border: 1px solid #444;
+    }
+
+    #subtitle {
+      margin-top: 12px;
+      color: #ffd6f3;
+      min-height: 1.5em;
+    }
+
+    #bottomNote {
+      margin-top: 16px;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 
 <body>
-<h2>Bad Apple-fier</h2>
-<p>It turns your image into Bad Apple or something.</p>
+  <script src="/header.js"></script>
 
-<input type="file" id="upload" accept="image/*"><br>
-<button id="startBtn">Start</button>
+  <div class="container">
+    <input type="file" id="upload" accept="image/*">
 
-<label for="lyricsSelect">Lyrics:</label>
-<select id="lyricsSelect">
-  <option value="none">No Lyrics</option>
-  <option value="jp">Original Japanese Lyrics</option>
-  <option value="en">English Lyrics</option>
-</select>
+    <br>
 
-<br><br>
+    <button id="playBtn">play</button>
+    <button id="pauseBtn">pause</button>
+    <button id="restartBtn">restart</button>
 
-<canvas id="canvas"></canvas>
-<div id="subtitle"></div>
+    <br>
 
-<audio id="music" src="badapple.mp3"></audio>
-<p id="bottomNote">
-  laggy? well <a href="localinstall.html">run it locally</a>
-</p>
+    <select id="lyricsSelect">
+      <option value="none">no lyrics</option>
+      <option value="jp">jp</option>
+      <option value="en">en</option>
+    </select>
 
-<script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const upload = document.getElementById('upload');
-const startBtn = document.getElementById('startBtn');
-const music = document.getElementById('music');
-const lyricsSelect = document.getElementById('lyricsSelect');
-const subtitleDiv = document.getElementById('subtitle');
+    <br>
 
-const threshold = 50;
-const totalFrames = 6572;
-const pixelSize = 16;
-const duration = 217;
+    <input type="range" id="resolution" min="4" max="32" step="2" value="16">
+    <span id="resLabel">16</span>px
 
-let uploadedImg = null;
-let running = false;
-let subtitles = [];
-let currentLyrics = "none";
+    <canvas id="canvas"></canvas>
+    <div id="subtitle"></div>
 
-upload.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    uploadedImg = new Image();
-    uploadedImg.onload = () => console.log("Uploaded image ready!");
-    uploadedImg.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-});
+    <audio id="music" src="badapple.mp3"></audio>
 
-lyricsSelect.addEventListener('change', () => {
-  const value = lyricsSelect.value;
-  currentLyrics = value;
-  subtitles = [];
-  subtitleDiv.innerHTML = '';
+    <p id="bottomNote">
+      laggy? <a href="localinstall.html">run it locally</a>
+    </p>
+  </div>
 
-  if (value === "jp") {
-    loadSRT('bad_apple.srt');
-  } else if (value === "en") {
-    loadSRT('bad_apple_en.srt');
-  }
-});
-
-function loadSRT(file) {
-  fetch(file)
-    .then(resp => resp.text())
-    .then(parseSRT)
-    .catch(err => console.error("Failed to load subtitles:", err));
-}
-
-function parseSRT(data) {
-  const lines = data.split(/\r?\n/);
-  subtitles = [];
-  let i = 0;
-  while (i < lines.length) {
-    if (!lines[i].trim()) { i++; continue; }
-    i++;
-    const time = lines[i++].trim();
-    const textLines = [];
-    while (i < lines.length && lines[i].trim()) {
-      textLines.push(lines[i++].trim());
-    }
-    const [start, end] = time.split(' --> ').map(t => srtTimeToSeconds(t));
-    subtitles.push({start, end, text: textLines.join('<br>')});
-  }
-}
-
-function srtTimeToSeconds(s) {
-  const m = s.match(/(\d+):(\d+):(\d+),(\d+)/);
-  if (!m) return 0;
-  return parseInt(m[1])*3600 + parseInt(m[2])*60 + parseInt(m[3]) + parseInt(m[4])/1000;
-}
-
-startBtn.addEventListener('click', () => {
-  if (!uploadedImg) return alert('Please upload an image first!');
-  running = !running;
-  startBtn.textContent = running ? "Stop" : "Start";
-
-  if (running) {
-    music.play();
-    requestAnimationFrame(animateFrame);
-  } else {
-    music.pause();
-  }
-});
-
-function animateFrame() {
-  if (!running) return;
-
-  const currentTime = music.currentTime;
-  let frameIndex = Math.floor((currentTime / duration) * totalFrames) + 1;
-  if (frameIndex > totalFrames) frameIndex = totalFrames;
-
-  const frameNum = String(frameIndex).padStart(4,'0');
-  const refImg = new Image();
-  refImg.crossOrigin = "anonymous";
-  refImg.src = `images/output_${frameNum}.jpg`;
-
-  refImg.onload = () => {
-    if (canvas.width !== refImg.width || canvas.height !== refImg.height) {
-      canvas.width = refImg.width;
-      canvas.height = refImg.height;
-    }
-
-    const tempRefCanvas = document.createElement('canvas');
-    tempRefCanvas.width = canvas.width;
-    tempRefCanvas.height = canvas.height;
-    const tempRefCtx = tempRefCanvas.getContext('2d');
-    tempRefCtx.drawImage(refImg, 0, 0);
-    const refData = tempRefCtx.getImageData(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (let y = 0; y < canvas.height; y += pixelSize) {
-      for (let x = 0; x < canvas.width; x += pixelSize) {
-        const i = (y * canvas.width + x) * 4;
-        const r = refData.data[i];
-        const g = refData.data[i+1];
-        const b = refData.data[i+2];
-        const brightness = (r+g+b)/3;
-
-        if (brightness <= threshold) {
-          const alpha = 1 - (brightness / threshold);
-          ctx.globalAlpha = alpha;
-          ctx.drawImage(uploadedImg, x, y, pixelSize, pixelSize);
-        }
-      }
-    }
-
-    ctx.globalAlpha = 1;
-
-    if (currentLyrics !== "none" && subtitles.length) {
-      const line = subtitles.find(s => currentTime >= s.start && currentTime <= s.end);
-      subtitleDiv.innerHTML = line ? line.text : '';
-    } else {
-      subtitleDiv.innerHTML = '';
-    }
-
-    requestAnimationFrame(animateFrame);
-  };
-
-  refImg.onerror = () => {
-    requestAnimationFrame(animateFrame);
-  };
-}
-</script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,12 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Santa's Adventure ultra official site trust</title>
-        <style>
-            body {
-                background-color: #91b5ff;
-            }
-        </style>
-    </head>
-    stupid page. work in progress.
+<head>
+    <meta charset="UTF-8">
+    <title>Santa's Adventure</title>
+
+    <meta name="description" content="Santa's Adventure is a freeware 2D Christmas platformer developed by the indie team LuzidDream.">
+    <meta name="author" content="LuzidDream">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="files/buttons.css">
+
+    <style>
+        @font-face {
+            font-family: "VGASYS";
+            src: url("files/VGASYS.TTF") format("truetype");
+        }
+
+        body {
+            background-color: #91b5ff;
+            font-family: "VGASYS", sans-serif;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            image-rendering: pixelated;
+            text-transform: uppercase;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            margin: 10px auto 20px;
+            display: block;
+            image-rendering: pixelated;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        .credit {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        #gray {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated;
+            cursor: default;
+        }
+
+        #blackout {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: none;
+        }
+
+        #blackout.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #blackout-text {
+            color: #fff;
+            font-size: 32px;
+            letter-spacing: 4px;
+            opacity: 0;
+            transition: opacity 3s ease;
+        }
+
+        #blackout.active #blackout-text {
+            opacity: 1;
+        }
+
+        body.desaturated {
+            filter: saturate(0.85);
+        }
+
+    </style>
+</head>
+<body>
+
+
+<main>
+    <div class="buttons">
+        <a class="button" style="--btn-color:#ffffff" href="/">BACK TO MAIN SITE</a>
+    </div>
+
+    <h1 class="sr-only">Santa's Adventure</h1>
+
+    <img src="images/logo.png" alt="Santa's Adventure logo" class="logo">
+
+    <p>
+        SANTA'S ADVENTURE IS A FREEWARE 2D CHRISTMAS PLATFORMER DEVELOPED BY THE INDIE TEAM <strong>LUZIDDREAM</strong>.
+        SANTA GETS LOST IN THE NORTH POLE AND MUST FIND HIS WAY BACK TO HIS TOY FACTORY.
+    </p>
+
+    <p class="credit">
+        MADE BY LUZIDDREAM · RELEASED DECEMBER 2024
+    </p>
+
+    <h2>PLAY</h2>
+    <div class="buttons" id="play-buttons">
+        <a class="button" style="--btn-color:#00ff00" href="https://gamejolt.com/games/Santa1/957897">GAMEJOLT</a>
+        <a class="button" style="--btn-color:#ff0000" href="https://luzid.itch.io/santas-adventure">ITCH.IO</a>
+    </div>
+
+    <h2>EXTRAS</h2>
+    <div class="buttons" id="extras-buttons">
+        <a class="button" style="--btn-color:#ffff00" href="texturepacks.html">TEXTURE PACK TEMPLATE</a>
+        <a class="button" style="--btn-color:#ff8800" href="https://gamebanana.com/games/24085">GAMEBANANA</a>
+        <a class="button" style="--btn-color:#0088ff" href="https://santasadventure.miraheze.org/wiki/The_Official_Santa%27s_Adventure_Wiki">WIKI</a>
+    </div>
+</main>
+
+<img src="images/gray.png" alt="" id="gray">
+
+<div id="blackout">
+    <div id="blackout-text">NOT, YET.</div>
+</div>
+
+<script>
+    const trigger = document.getElementById("gray");
+    const blackout = document.getElementById("blackout");
+
+    function hideTrigger() {
+        trigger.style.display = "none";
+    }
+
+    try {
+        if (localStorage.getItem("?????") === "1") hideTrigger();
+    } catch {}
+
+    trigger.addEventListener("click", () => {
+        blackout.classList.add("active");
+        setTimeout(() => {
+            blackout.classList.remove("active");
+            document.body.classList.add("desaturated");
+        }, 5000);
+        try { localStorage.setItem("?????", "1"); } catch {}
+        hideTrigger();
+    });
+</script>
+
+</body>
 </html>

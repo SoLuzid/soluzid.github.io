@@ -1,64 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Santa's Adventure Countdown</title>
-<link rel="stylesheet" href="/style.css">
-</head>
-<body>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Santa's Adventure Countdown</title>
+  <link href="style.css" rel="stylesheet">
 
-<h1>Santa's Adventure</h1>
+  <style>
 
-<h2>Santa's Adventure 1</h2>
-<p>25 December 2025</p>
-<p>released</p>
-
-<h2>Santa's Adventure 2</h2>
-<p>Indefinite Hiatus</p>
-<p id="c2">loading...</p>
-
-<script>
-function countdown(id, target) {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    const now = Date.now();
-    let diff = target - now;
-
-    if (diff <= 0) {
-        el.textContent = "now";
-        return;
+    .container {
+      max-width: 720px;
+      margin: 24px auto;
+      padding: 0 24px;
+      text-align: center;
     }
 
-    const sec = Math.floor(diff / 1000);
+    h2 { color: #d6e3ff; }
+    p  { color: #ccccff; }
 
-    const years = Math.floor(sec / 31536000);
-    let rem = sec % 31536000;
+    .entry {
+      margin: 24px 0;
+      padding: 16px;
+      background: #141428;
+      border: 1px solid #444;
+    }
 
-    const days = Math.floor(rem / 86400);
-    rem %= 86400;
+    .status {
+      color: #ffd6f3;
+      font-weight: bold;
+    }
+  </style>
+</head>
 
-    const hours = Math.floor(rem / 3600);
-    rem %= 3600;
+<body>
+  <script src="/header.js"></script>
 
-    const mins = Math.floor(rem / 60);
-    const secs = rem % 60;
+  <div class="container">
+    <div class="entry">
+      <h2>Santa's Adventure 1</h2>
+      <p>25 Dec 2025</p>
+      <p class="status">released</p>
+    </div>
 
-    el.textContent =
-        years + " years " +
-        days + " days " +
-        hours + " hours " +
-        mins + " minutes " +
-        secs + " seconds";
-}
+    <div class="entry">
+      <h2>Santa's Adventure 2</h2>
+      <p class="status">cancelled</p>
+      <p id="c2">loading</p>
+    </div>
+  </div>
 
-/* SA2: completely bogus far-future date */
-const d2 = new Date(9999, 11, 25, 0, 0, 0).getTime();
+  <script>
+    function countdown(id, target) {
+      const el = document.getElementById(id);
+      if (!el) return;
 
-setInterval(() => {
-    countdown("c2", d2);
-}, 1000);
-</script>
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        el.textContent = "now";
+        return;
+      }
 
+      const sec = Math.floor(diff / 1000);
+      const years = Math.floor(sec / 31536000);
+      let rem = sec % 31536000;
+      const days = Math.floor(rem / 86400);
+      rem %= 86400;
+      const hours = Math.floor(rem / 3600);
+      rem %= 3600;
+      const mins = Math.floor(rem / 60);
+      const secs = rem % 60;
+
+      el.textContent =
+        years + "y " +
+        days + "d " +
+        hours + "h " +
+        mins + "m " +
+        secs + "s";
+    }
+
+    const d2 = new Date(9999, 11, 25, 0, 0, 0).getTime();
+    setInterval(() => countdown("c2", d2), 1000);
+  </script>
 </body>
 </html>

@@ -1,36 +1,47 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hi hello how are you doing</title>
-    <link href="style.css" rel="stylesheet">
-  </head>
-  <body>
-    <h1>Welcome to my Website</h1>
-    <h2>i make games. yay</h2>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hi hello how are you doing</title>
+  <link href="style.css" rel="stylesheet">
+  <style>
 
-    <!-- Navigation -->
-    <nav id="nav">
-      <strong>Pages:</strong>
+  .container {
+    max-width: 720px;
+    margin: 24px auto;
+    padding: 0 24px;
+    text-align: center;
+  }
 
-      <h3>my cool stuff :3</h3>
-      <ul>
-        <li><a href="/art/index.html">My art :3</a></li>
-        <li><a href="/games/">My games :3</a></li>
-      </ul>
+  h2 { color: #d6e3ff; }
+  h3 { color: #e8d6ff; }
+  p  { color: #ccccff; }
+</style>
+</head>
 
-      <h3>Misc</h3>
-      <ul>
-        <li><a href="/convert.html">Doom Builder Units to MC Blocks</a></li>
-        <li><a href="/santacountdown.html">Santa's Adventure Countdown</a></li>
-        <li><a href="/badapplefier/index.html">Bad Apple-fier</a></li>
-        <li><a href="/SantaAdventure/index.html">Santa's Adventure site, it's work in progress please ignore this please i beg you please please please please please</a></li>
-      </ul>
-    </nav>
+<body>
 
+  <script
+    src="/header.js"
+    data-home="0">
+  </script>
+
+
+  <div class="container" style="margin-top:24px;">
+    <img src="gifs/yuuri3.gif" alt="Yuuri">
+    <h2>you can find cool stuff in my site</h2>
+    <img id="yuuri2" src="gifs/yuuri2.gif" alt="Yuuri">
     <p>bleh</p>
-
     <h3>not in neocities anymore!!!</h3>
-  </body>
+    <img src="gifs/yuuri4.gif" alt="Yuuri" id="yuuri">
+  </div>
+
+  <script>
+    const yuuri2 = document.getElementById("yuuri2");
+    if (Math.random() < 0.2) {
+      yuuri2.src = "gifs/yuuri2skelingtong.gif";
+    }
+  </script>
+</body>
 </html>
