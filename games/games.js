@@ -24,6 +24,17 @@ const gameList = [
     ]
   },
   {
+    page: "el pibe/index.html",
+    date: "2026-01-17 12:00",
+    title: "el pibe :v",
+    version: "si",
+    description: "un juegito de mierda que hice in 3 minutos en el scratch 1.4",
+    preview: null,
+    changelog: [
+      "si: si"
+    ]
+  },
+  {
     page: "Santa's Adventure 2 web/index.html",
     date: "2025-8-4 12:00",
     title: "Santa's Adventure 2 demo",
@@ -36,7 +47,7 @@ const gameList = [
       "0.5: initial release"
     ],
     folder: "Old Games i dont care about anymore :3"
-  },
+  }
 ];
 
 const ICONS = {

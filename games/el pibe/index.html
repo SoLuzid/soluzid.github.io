@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>el pibe :v</title>
+
+    <script src="/games/important/ruffle"></script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <button id="start-btn">empeza el juego</button>
+
+    <div id="game-container" style="display:none;"></div>
+
+    <p>un juego que hice in 3 minutos de chiste xd</p>
+    <p>english: a game that i made in 3 minutes as a joke xd</p>
+
+    <a href=".">regresar :v</a>
+
+<script>
+window.RufflePlayer = window.RufflePlayer || {};
+
+window.addEventListener("DOMContentLoaded", () => {
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+
+    player.style.width = "800px";
+    player.style.height = "600px";
+
+    const container = document.getElementById("game-container");
+
+    document.getElementById("start-btn").addEventListener("click", () => {
+        container.style.display = "block";
+        document.getElementById("start-btn").style.display = "none";
+
+        container.appendChild(player);
+        player.load("el pibe.swf");
+    });
+});
+</script>
+
+</body>
+</html>
