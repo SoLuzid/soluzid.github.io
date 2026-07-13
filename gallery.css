@@ -3,3 +3,66 @@ li.folder img {
   height: 32px;
   object-fit: contain;
 }
+.container {
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+h2 {
+  color: #e0add4;
+  margin-bottom: 16px;
+}
+
+#gallery {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+#gallery li {
+  background: #2b1f28;
+  padding: 16px;
+  border: 2px solid #58404f;
+  text-align: center;
+}
+
+#gallery li a {
+  text-decoration: none;
+  color: #dba5ca;
+  font-weight: bold;
+}
+
+#gallery li a:hover {
+  color: #ffffff;
+}
+
+#gallery li div {
+  color: #c895b9;
+  margin-top: 8px;
+}
+
+li.folder {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #251b22;
+  padding: 8px 12px;
+}
+
+li.folder img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+li.folder span {
+  color: #dba5ca;
+  font-weight: bold;
+}
+

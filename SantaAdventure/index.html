@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Santa's Adventure</title>
-
     <meta name="description" content="Santa's Adventure is a freeware 2D Christmas platformer developed by the indie team LuzidDream.">
     <meta name="author" content="LuzidDream">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -75,12 +74,12 @@
             inset: 0;
             background: #000;
             display: none;
+            align-items: center;
+            justify-content: center;
         }
 
         #blackout.active {
             display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         #blackout-text {
@@ -98,11 +97,9 @@
         body.desaturated {
             filter: saturate(0.85);
         }
-
     </style>
 </head>
 <body>
-
 
 <main>
     <div class="buttons">
@@ -110,25 +107,25 @@
     </div>
 
     <h1 class="sr-only">Santa's Adventure</h1>
-
     <img src="images/logo.png" alt="Santa's Adventure logo" class="logo">
 
     <p>
-        SANTA'S ADVENTURE IS A FREEWARE 2D CHRISTMAS PLATFORMER DEVELOPED BY THE INDIE TEAM <strong>LUZIDDREAM</strong>.
-        SANTA GETS LOST IN THE NORTH POLE AND MUST FIND HIS WAY BACK TO HIS TOY FACTORY.
+        SANTA'S ADVENTURE is a little free christmas platformer. 
+        santa gets lost in the north pole and has to find his way back to the toy factory.
+        made by luz.
     </p>
 
     <p class="credit">
-        MADE BY LUZIDDREAM · RELEASED DECEMBER 2024
+        Made by Luz - December 2024
     </p>
 
-    <h2>PLAY</h2>
+    <h2>Play</h2>
     <div class="buttons" id="play-buttons">
         <a class="button" style="--btn-color:#00ff00" href="https://gamejolt.com/games/Santa1/957897">GAMEJOLT</a>
         <a class="button" style="--btn-color:#ff0000" href="https://luzid.itch.io/santas-adventure">ITCH.IO</a>
     </div>
 
-    <h2>EXTRAS</h2>
+    <h2>Extras</h2>
     <div class="buttons" id="extras-buttons">
         <a class="button" style="--btn-color:#ffff00" href="texturepacks.html">TEXTURE PACK TEMPLATE</a>
         <a class="button" style="--btn-color:#ff8800" href="https://gamebanana.com/games/24085">GAMEBANANA</a>
@@ -160,7 +157,11 @@
             blackout.classList.remove("active");
             document.body.classList.add("desaturated");
         }, 5000);
-        try { localStorage.setItem("?????", "1"); } catch {}
+        
+        try {
+            localStorage.setItem("?????", "1");
+        } catch {}
+        
         hideTrigger();
     });
 </script>

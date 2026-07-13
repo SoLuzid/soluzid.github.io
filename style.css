@@ -1,6 +1,6 @@
 body {
-  background-color: #1a1a2a;
-  color: #e8e8f0;
+  background-color: #1f171d;
+  color: #d6a0c7;
   font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -21,17 +21,17 @@ img {
 }
 
 header {
-  background: #2c2c44;
-  padding: 16px 24px;
+  background: #2f222b;
+  padding: 20px 0 0;
   text-align: center;
-  border-bottom: 2px solid #444;
+  border-bottom: 2px solid #58404f;
   overflow: visible;
 }
 
 header h1 {
-  margin: 0;
+  margin: 0 0 16px 0;
   font-size: 2em;
-  color: #ffd6f3;
+  color: #e0add4;
 }
 
 nav.main-nav {
@@ -40,14 +40,9 @@ nav.main-nav {
   z-index: 500;
   display: flex;
   justify-content: center;
-  background-color: #1f1f3a;
-  border-bottom: 2px solid #444;
-  margin-left: -24px;
-  margin-right: -24px;
-  padding-left: 24px;
-  padding-right: 24px;
+  background-color: #34232d;
+  border-top: 2px solid #58404f;
 }
-
 
 nav.main-nav ul {
   list-style: none;
@@ -62,15 +57,16 @@ nav.main-nav li {
 
 nav.main-nav a {
   display: block;
-  padding: 12px 20px;
-  color: #9db4ff;
+  padding: 12px 24px;
+  color: #dba5ca;
   text-decoration: none;
   font-weight: bold;
   white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 nav.main-nav a:hover {
-  background-color: #2c2c44;
+  background-color: #4c3343;
   color: #ffffff;
 }
 
@@ -78,11 +74,14 @@ nav.main-nav li ul {
   display: none;
   position: absolute;
   top: 100%;
-  left: 0;
-  background-color: #1f1f3a;
-  min-width: 200px;
-  border: 1px solid #444;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #3b2733;
+  min-width: 220px;
+  border: 2px solid #58404f;
+  overflow: hidden;
   z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 nav.main-nav li:hover > ul {
@@ -90,9 +89,10 @@ nav.main-nav li:hover > ul {
 }
 
 nav.main-nav li ul li a {
-  padding: 10px 16px;
+  padding: 12px 16px;
+  text-align: left;
 }
 
 nav.main-nav li ul li a:hover {
-  background-color: #2c2c44;
+  background-color: #4c3343;
 }
