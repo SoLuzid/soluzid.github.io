@@ -29,4 +29,5 @@ const ART_DATA = {
     folder: "pixel art"
   }
 };
+// it's not even used!
 const FOLDER_DATA = {};

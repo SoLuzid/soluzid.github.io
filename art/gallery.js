@@ -94,7 +94,7 @@ function showWarning(text, callback) {
     callback();
   };
 }
-
+// is this even used
 const DEFAULT_WARNING_TEXT =
   "Hey uh, these arts i made contain slightly suggestive content, so if you dont wanna see that then uh leave";
 

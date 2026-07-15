@@ -15,7 +15,8 @@ const COLORS = {
 
 const list = document.getElementById("gameList");
 let currentFolder = "";
-
+// this is bullshit why the fuck isn't it in a separate js like art-data.js
+// TODO: make this less bullshit, oh and try to actually make the damn previews
 const gameList = [{
     page: "Dodge Spinner/index.html",
     date: "2026-02-01 13:20",
