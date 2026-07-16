@@ -9,4 +9,5 @@ fetch("/header.html")
       const homeLink = document.querySelector(".home-link");
       if (homeLink) homeLink.style.pointerEvents = "none";
     }
+    
   });
