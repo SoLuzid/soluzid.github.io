@@ -6,7 +6,21 @@ body {
   padding: 0;
 }
 
+a {
+  color: #ccccff;
+}
 
+a:visited {
+  color: #b8b8ff;
+}
+
+a:hover {
+  color: #e8d6ff;
+}
+
+a:active {
+  color: #ffffff;
+}
 
 img {
   max-width: 180px;

@@ -1,58 +1,117 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Run Bad Apple-fier Locally</title>
+  <title>bad apple-fier local install</title>
   <link href="/style.css" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 720px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+
+    h2 { color: #dba5ca; }
+    h3 { color: #c895b9; }
+    p  { color: #d6a0c7; }
+
+    ul {
+      color: #d6a0c7;
+      line-height: 1.6;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    pre {
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+    }
+
+    hr {
+      margin: 24px 0;
+      border: none;
+      border-top: 1px solid #444;
+    }
+  </style>
 </head>
 <body>
-  <script src="/header.js"></script>
 
-  <main class="container">
-    <h1>Run Bad Apple-fier Locally</h1>
+  <script
+    src="/header.js"
+    data-home="0">
+  </script>
 
-    <h2>1. Install Python (PC only)</h2>
-    <p>If you are on PC, install Python.</p>
+  <div class="container" style="margin-top:24px;">
+
+    <h2>run bad apple-fier locally</h2>
+
+    <p>if the website is lagging, you can run it on your own device instead.</p>
+
+    <hr>
+
+    <h3>1. install python (pc only)</h3>
+
+    <p>if you're on windows, install python first.</p>
+
     <p>
-      <a href="https://www.python.org/downloads/" target="_blank">
-        https://www.python.org/downloads/
+      <a href="https://www.python.org/downloads/" target="_blank" rel="noopener noreferrer">
+        python.org/downloads
       </a>
     </p>
 
-    <h2>2. Download it</h2>
-    <p>You can download Bad Apple-fier from:</p>
+    <h3>2. download bad apple-fier</h3>
+
+    <p>pick whichever is easier:</p>
+
     <ul>
       <li>
-        ZIP:
-        <a href="https://file.garden/ZYwdaI8EZxs65XTA/badapplefier.zip" target="_blank">
-          download here
+        <a href="https://file.garden/ZYwdaI8EZxs65XTA/badapplefier.zip" target="_blank" rel="noopener noreferrer">
+          zip download
         </a>
       </li>
+
       <li>
-        GitHub:
-        <a href="https://github.com/SoLuzid/soluzid.github.io/tree/main" target="_blank">
-          here
+        <a href="https://github.com/SoLuzid/soluzid.github.io/tree/main" target="_blank" rel="noopener noreferrer">
+          github repository
         </a>
       </li>
     </ul>
 
-    <h2>3. Extract</h2>
-    <p>Extract the files into a folder.</p>
+    <h3>3. extract it</h3>
 
-    <h2>4. Run on PC</h2>
-    <p>Open a terminal in the folder and type:</p>
+    <p>extract everything into one folder.</p>
+
+    <h3>4. run it</h3>
+
+    <p>open a terminal in that folder and run:</p>
+
     <pre><code>python -m http.server</code></pre>
-    <p>Open this in your browser:</p>
-    <pre><code>http://localhost:8000</code></pre>
 
-    <h2>5. Run on mobile</h2>
-    <p>Install QuickEdit.</p>
-    <p>Extract the files, open <code>index.html</code>, and press Run.</p>
+    <p>then open <code>http://localhost:8000</code> in your browser.</p>
 
-    <h2>Notes</h2>
-    <p>Do not move files.</p>
-  </main>
+    <h3>5. mobile</h3>
+
+    <p>i recommend quickedit because it can run bad apple-fier.</p>
+
+    <p>extract the files, open <code>index.html</code>, then press run.</p>
+
+    <hr>
+
+    <h3>notes</h3>
+
+    <ul>
+      <li>don't move any files after extracting them.</li>
+      <li>if something is missing, extract the zip again.</li>
+      <li>running it locally is usually much faster than the website.</li>
+    </ul>
+
+  </div>
 
 </body>
 </html>
