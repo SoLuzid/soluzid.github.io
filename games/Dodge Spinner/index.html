@@ -4,39 +4,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <!-- We only include this to explicitly loosen the CSP of various packager environments. It does not provide any security. -->
   <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">
   <title>Dodge Spinner</title>
   <style>
-    body {
-      color: #ffffff;
-      font-family: sans-serif;
-      overflow: hidden;
+    html, body {
+      width: 100%;
+      height: 100%;
       margin: 0;
       padding: 0;
+      overflow: hidden;
+      color: #ffffff;
+      font-family: sans-serif;
     }
-    :root, body.is-fullscreen {
-      background-color: #000000;
+    
+    :root, body, body.is-fullscreen {
+      background-color: #454444;
+      background-image: url("border.jpeg");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
+
     [hidden] {
       display: none !important;
-    }
-    h1 {
-      font-weight: normal;
-    }
-    a {
-      color: inherit;
-      text-decoration: underline;
-      cursor: pointer;
     }
 
     #app, #loading, #error, #launch {
       position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
+    .sc-canvas {
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.85);
+      margin: auto;
+    }
+
     .screen {
       display: flex;
       flex-direction: column;
@@ -48,10 +59,12 @@
       -webkit-user-select: none;
       background-color: #000000;
     }
+
     #launch {
       background-color: rgba(0, 0, 0, 0.7);
       cursor: pointer;
     }
+
     .green-flag {
       width: 80px;
       height: 80px;
@@ -64,83 +77,43 @@
       align-items: center;
       box-sizing: border-box;
     }
+
     #loading {
-      background-color: #000000;
+      background-color: #454444;
+      background-image: url("border.jpeg");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
+
     .progress-bar-outer {
-      border: 1px solid currentColor;
-      height: 10px;
-      width: 200px;
+      border: 1px solid #454444;
+      height: 5%;
+      width: 200%;
       max-width: 200px;
+      border-radius: 100px;
+      background-color: #1a1a1a;
+      overflow: hidden;
     }
+
     .progress-bar-inner {
       height: 100%;
-      width: 0;
-      background-color: currentColor;
+      width: 0%;
+      border-radius: 100px;
+      background-color: #ff4444; 
+      box-shadow: 
+        0 0 15px #ff4444;
+      
     }
-    .loading-text, noscript {
-      font-weight: normal;
-      font-size: 36px;
-      margin: 0 0 16px;
-    }
-    .loading-image {
-      margin: 0 0 16px;
-    }
-    #error-message, #error-stack {
-      font-family: monospace;
-      max-width: 600px;
-      white-space: pre-wrap;
-      user-select: text;
-      -webkit-user-select: text;
-    }
-    #error-stack {
-      text-align: left;
-      max-height: 200px;
-      overflow: auto;
-    }
-    .control-button {
-      width: 2rem;
-      height: 2rem;
-      padding: 0.375rem;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
-      user-select: none;
-      -webkit-user-select: none;
-      cursor: pointer;
-      border: 0;
-      border-radius: 4px;
-    }
-    .control-button-highlight:hover {
-      background: #ff4c4c26;
-    }
-    .control-button-highlight.active {
-      background: #ff4c4c59;
-    }
-    .fullscreen-button {
-      background: white;
-    }
-    .standalone-fullscreen-button {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 0 0 0 4px;
-      padding: 4px;
-      cursor: pointer;
-    }
-    .sc-canvas {
-      cursor: auto;
-    }
+
+
     .sc-monitor-root[data-opcode^="data_"] .sc-monitor-value-color {
       background-color: #ff8c1a;
     }
     .sc-monitor-row-value-outer {
       background-color: #fc662c;
     }
-    .sc-monitor-row-value-editing .sc-monitor-row-value-outer {
-      background-color: #e25b27;
-    }
-    
   </style>
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAPlJREFUeJztmFEKgzAQBd96yJzOE3jJ9KsgEmhL3R1h34A/fphxiMEkBDClubofUlS7bNUDPg0HoAVoHIAWoHEAWoDGAWgBGgegBWgcgBagcQBagMYBaAEaB6AFaNoHKD2EHGMsD0OvHMdR5tV+BjgALUBT9q19+/2/qVoH0gf59cWvZIdIefi/L70iK0T7NWCb0rz7yhDN8JzS9AygBWgcgBagcYCQ4u4rQzTDM6RoPwP8K5z58DNtN0NnfCL0QByAFmjJvtiV7Um7yE+0nwEOQAvQOAAtQOMAtACNA9ACNA5AC9A4AC1A4wC0AI0D0AI0DkAL0LQP8AKHOn+lA60GrgAAAABJRU5ErkJggg==">

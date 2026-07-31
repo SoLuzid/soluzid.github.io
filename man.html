@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>&lrm;</title>
+    <style>
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        #tree {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        #dialogue {
+            position: fixed;
+            left: 50%;
+            bottom: 40px;
+            transform: translateX(-50%);
+            width: 640px;
+            max-width: calc(100vw - 40px);
+            min-height: 120px;
+            padding: 18px 24px;
+            border: 2px solid white;
+            background: rgba(0, 0, 0, 0.92);
+            color: white;
+            box-sizing: border-box;
+            display: none;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 22px;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        #dialogueText {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<audio id="music" src="man.ogg" loop></audio>
+
+<img id="tree" src="gifs/tree.gif" alt="tree">
+
+<div id="dialogue">
+    <div id="dialogueText"></div>
+</div>
+
+<script>
+const music = document.getElementById("music");
+const tree = document.getElementById("tree");
+const dialogue = document.getElementById("dialogue");
+const dialogueText = document.getElementById("dialogueText");
+
+const pages = [
+    "(Well, there is a man here.)",
+    "(He offered you something.)",
+    "You got the egg."
+];
+
+let page = 0;
+let typing = false;
+
+const returnUrl = sessionStorage.getItem("returnUrl") || document.referrer || "index.html";
+
+document.addEventListener("mousemove", () => {
+    tree.style.display = "block";
+    music.play().catch(() => {});
+}, { once: true });
+
+tree.addEventListener("click", () => {
+    if (dialogue.style.display === "flex") return;
+
+    dialogue.style.display = "flex";
+    typeText(pages[0]);
+});
+
+dialogue.addEventListener("click", () => {
+    if (typing) return;
+
+    page++;
+
+    if (page >= pages.length) {
+        return;
+    }
+
+    typeText(pages[page], () => {
+        if (page === 2) {
+            localStorage.setItem("manegg", "true");
+
+            setTimeout(() => {
+                location.href = returnUrl;
+            }, 2000);
+        }
+    });
+});
+
+function typeText(text, done) {
+    typing = true;
+    dialogueText.textContent = "";
+
+    let i = 0;
+
+    const timer = setInterval(() => {
+        dialogueText.textContent += text[i];
+        i++;
+
+        if (i >= text.length) {
+            clearInterval(timer);
+            typing = false;
+
+            if (done) {
+                done();
+            }
+        }
+    }, 35);
+}
+</script>
+
+</body>
+</html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Santa's Adventure</title>
-    <meta name="description" content="Santa's Adventure is a freeware 2D Christmas platformer developed by the indie team LuzidDream.">
-    <meta name="author" content="LuzidDream">
+    <meta name="description" content="Santa's Adventure is a freeware Christmas platformer made by Luz.">
+    <meta name="author" content="Luz">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="files/buttons.css">
@@ -47,7 +47,7 @@
             height: 1px;
             margin: -1px;
             overflow: hidden;
-            clip: rect(0,0,0,0);
+            clip: rect(0, 0, 0, 0);
         }
 
         h2 {
@@ -99,38 +99,57 @@
         }
     </style>
 </head>
+
 <body>
 
 <main>
+
     <div class="buttons">
-        <a class="button" style="--btn-color:#ffffff" href="/">BACK TO MAIN SITE</a>
+        <a class="button" style="--btn-color:#ffffff" href="/">
+            BACK TO MAIN SITE
+        </a>
     </div>
 
     <h1 class="sr-only">Santa's Adventure</h1>
     <img src="images/logo.png" alt="Santa's Adventure logo" class="logo">
 
     <p>
-        SANTA'S ADVENTURE is a little free christmas platformer. 
-        santa gets lost in the north pole and has to find his way back to the toy factory.
-        made by luz.
+        SANTA'S ADVENTURE IS A LITTLE FREE CHRISTMAS PLATFORMER.<br><br>
+        SANTA GETS LOST IN THE NORTH POLE AND HAS TO FIND HIS WAY BACK TO THE TOY FACTORY.
     </p>
 
     <p class="credit">
-        Made by Luz - December 2024
+        MADE BY LUZ - DECEMBER 2024
     </p>
 
-    <h2>Play</h2>
+    <h2>PLAY</h2>
+
     <div class="buttons" id="play-buttons">
-        <a class="button" style="--btn-color:#00ff00" href="https://gamejolt.com/games/Santa1/957897">GAMEJOLT</a>
-        <a class="button" style="--btn-color:#ff0000" href="https://luzid.itch.io/santas-adventure">ITCH.IO</a>
+        <a class="button" style="--btn-color:#00ff00" href="https://gamejolt.com/games/Santa1/957897">
+            GAMEJOLT
+        </a>
+
+        <a class="button" style="--btn-color:#ff0000" href="https://luzid.itch.io/santas-adventure">
+            ITCH.IO
+        </a>
     </div>
 
-    <h2>Extras</h2>
+    <h2>EXTRAS</h2>
+
     <div class="buttons" id="extras-buttons">
-        <a class="button" style="--btn-color:#ffff00" href="texturepacks.html">TEXTURE PACK TEMPLATE</a>
-        <a class="button" style="--btn-color:#ff8800" href="https://gamebanana.com/games/24085">GAMEBANANA</a>
-        <a class="button" style="--btn-color:#0088ff" href="https://santasadventure.miraheze.org/wiki/The_Official_Santa%27s_Adventure_Wiki">WIKI</a>
+        <a class="button" style="--btn-color:#ffff00" href="texturepacks.html">
+            RESOURCE PACK TEMPLATE
+        </a>
+
+        <a class="button" style="--btn-color:#ff8800" href="https://gamebanana.com/games/24085">
+            GAMEBANANA
+        </a>
+
+        <a class="button" style="--btn-color:#0088ff" href="https://santasadventure.miraheze.org/wiki/The_Official_Santa%27s_Adventure_Wiki">
+            WIKI
+        </a>
     </div>
+
 </main>
 
 <img src="images/gray.png" alt="" id="gray">
@@ -148,20 +167,23 @@
     }
 
     try {
-        if (localStorage.getItem("?????") === "1") hideTrigger();
+        if (localStorage.getItem("?????") === "1") {
+            hideTrigger();
+        }
     } catch {}
 
     trigger.addEventListener("click", () => {
         blackout.classList.add("active");
+
         setTimeout(() => {
             blackout.classList.remove("active");
             document.body.classList.add("desaturated");
         }, 5000);
-        
+
         try {
             localStorage.setItem("?????", "1");
         } catch {}
-        
+
         hideTrigger();
     });
 </script>
