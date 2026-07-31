@@ -20,7 +20,7 @@ fetch("/header.html")
     if (
       homeAnchor &&
       localStorage.getItem("manegg") !== "true" &&
-      Math.random() < 0.1
+      Math.random() < 0.02
     ) {
       homeAnchor.addEventListener("click", e => {
         e.preventDefault();
