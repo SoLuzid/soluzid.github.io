@@ -26,5 +26,6 @@ fetch("/header.html")
         sessionStorage.setItem("returnUrl", location.href);
         location.href = d;
       });
+      a.textContent = "home...?";
     }
   });
