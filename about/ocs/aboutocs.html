@@ -13,22 +13,51 @@
       font-weight: bold;
       text-decoration: none;
     }
+
     .container a {
       color: #dba5ca;
     }
+
     .container a:hover {
       color: #ffffff;
     }
   </style>
 </head>
-<body> <!-- TODO: make the damn fucking pages -->
+<body>
     <script src="/header.js" data-home="1"></script>
+
     <div class="container" style="margin-top:24px;">
         <h1>hi here you can see like my OCs i believe</h1>
+
         <a href="/about/ocs/Atrix.html">Atrix Zeck</a>
         <a href="/about/ocs/Xitra.html">Xitra Zeck</a>
         <span>Ty Averant (Not Done Yet)</span>
         <span>Rose HalLight (Not Done Yet)</span>
     </div>
+
+    <script>
+    (() => {
+        const k = [109,97,110,101,103,103]
+            .map(x => String.fromCharCode(x))
+            .join("");
+
+        if (localStorage.getItem(k) === "true") {
+            const a = document.createElement("a");
+
+            a.textContent = [68,69,86,73,67,69,95,87,69,66,83,73,84,69]
+                .map(x => String.fromCharCode(x))
+                .join("");
+
+            a.href = "/" + [
+                68,69,86,73,67,69,95,87,69,66,83,73,84,69,
+                46,104,116,109,108
+            ].map(x => String.fromCharCode(x)).join("");
+
+            a.style.marginTop = "1200px";
+
+            document.querySelector(".container").appendChild(a);
+        }
+    })();
+    </script>
 </body>
 </html>
