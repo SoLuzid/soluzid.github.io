@@ -13,18 +13,26 @@
             font-family: sans-serif;
         }
 
-        #tree {
+        #ayll {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            display: none;
-            cursor: pointer;
+            display: block;
+            opacity: 0.06;
+            cursor: default;
             user-select: none;
             -webkit-user-drag: none;
+            pointer-events: none;
         }
 
-        #dialogue {
+        #ayll.active {
+            opacity: 1;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        #kphsvnbl {
             position: fixed;
             left: 50%;
             bottom: 40px;
@@ -47,90 +55,91 @@
             white-space: pre-line;
         }
 
-        #dialogueText {
+        #kphsvnblAlea {
             width: 100%;
         }
     </style>
 </head>
 <body>
 
-<audio id="music" src="man.ogg" loop></audio>
-
-<img id="tree" src="gifs/tree.gif" alt="tree">
-
-<div id="dialogue">
-    <div id="dialogueText"></div>
-</div>
+<audio id="tbzpj" src="man.ogg" loop preload="auto"></audio>
+<img id="ayll" src="gifs/ayll.gif" alt="ayll">
+<div id="kphsvnbl"><div id="kphsvnblAlea"></div></div>
 
 <script>
-const music = document.getElementById("music");
-const tree = document.getElementById("tree");
-const dialogue = document.getElementById("dialogue");
-const dialogueText = document.getElementById("dialogueText");
-
-const pages = [
-    "(Well, there is a man here.)",
-    "(He offered you something.)",
-    "You got the egg."
-];
-
-let page = 0;
-let typing = false;
-
-const returnUrl = sessionStorage.getItem("returnUrl") || document.referrer || "index.html";
-
-document.addEventListener("mousemove", () => {
-    tree.style.display = "block";
-    music.play().catch(() => {});
-}, { once: true });
-
-tree.addEventListener("click", () => {
-    if (dialogue.style.display === "flex") return;
-
-    dialogue.style.display = "flex";
-    typeText(pages[0]);
-});
-
-dialogue.addEventListener("click", () => {
-    if (typing) return;
-
-    page++;
-
-    if (page >= pages.length) {
-        return;
-    }
-
-    typeText(pages[page], () => {
-        if (page === 2) {
-            localStorage.setItem("manegg", "true");
-
-            setTimeout(() => {
-                location.href = returnUrl;
-            }, 2000);
-        }
+(() => {
+    const z = s => document.getElementById(s);
+    const a = z("tbzpj");
+    const b = z("ayll");
+    const c = z("kphsvnbl");
+    const d = z("kphsvnblAlea");
+    const e = [
+        "(Zhoo, wkhuh lv d pdq khuh.)",
+        "(Kh riihuhg brx vrphwklqj.)",
+        "Brx jrw wkh hjj."
+    ];
+    const f = 3;
+    const g = t => t.replace(/[a-zA-Z]/g, u => {
+        const v = u <= "Z" ? 65 : 97;
+        return String.fromCharCode((u.charCodeAt(0) - v - f + 260) % 26 + v);
     });
-});
+    const h = e.map(g);
+    const i = sessionStorage.getItem("returnUrl") || document.referrer || "index.html";
+    let j = 0;
+    let k = 0;
+    let l = 0;
 
-function typeText(text, done) {
-    typing = true;
-    dialogueText.textContent = "";
+    const m = () => {
+        if (l) return;
+        l = 1;
+        b.classList.add("active");
+        a.play().catch(() => {
+            l = 0;
+            b.classList.remove("active");
+        });
+    };
 
-    let i = 0;
-
-    const timer = setInterval(() => {
-        dialogueText.textContent += text[i];
-        i++;
-
-        if (i >= text.length) {
-            clearInterval(timer);
-            typing = false;
-
-            if (done) {
-                done();
+    const n = (q, r) => {
+        k = 1;
+        d.textContent = "";
+        let s = 0;
+        const t = setInterval(() => {
+            d.textContent += q[s++];
+            if (s >= q.length) {
+                clearInterval(t);
+                k = 0;
+                if (r) r();
             }
-        }
-    }, 35);
-}
+        }, 35);
+    };
+
+    const o = () => {
+        if (!l) return;
+        if (c.style.display === "flex") return;
+        c.style.display = "flex";
+        j = 0;
+        n(h[0]);
+    };
+
+    const p = () => {
+        if (k) return;
+        j++;
+        if (j >= h.length) return;
+        n(h[j], () => {
+            if (j === 2) {
+                localStorage.setItem("manegg", "true");
+                setTimeout(() => {
+                    location.href = i;
+                }, 2000);
+            }
+        });
+    };
+
+    document.addEventListener("pointerdown", m, { once: true });
+    document.addEventListener("keydown", m, { once: true });
+    b.addEventListener("click", o);
+    c.addEventListener("click", p);
+})();
 </script>
 
 </body>

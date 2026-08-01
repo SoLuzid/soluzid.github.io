@@ -10,22 +10,21 @@ fetch("/header.html")
       h1.textContent = document.title;
     }
 
-    const homeAnchor = document.querySelector(".home-link a");
+    const a = document.querySelector(".home-link a");
 
     if (opts.home === "0") {
-      const homeLink = document.querySelector(".home-link");
-      if (homeLink) homeLink.style.pointerEvents = "none";
+      const b = document.querySelector(".home-link");
+      if (b) b.style.pointerEvents = "none";
     }
 
-    if (
-      homeAnchor &&
-      localStorage.getItem("manegg") !== "true" &&
-      Math.random() < 0.02
-    ) {
-      homeAnchor.addEventListener("click", e => {
+    const c = [109, 97, 110, 101, 103, 103].map(n => String.fromCharCode(n)).join("");
+    const d = String.fromCharCode(47, 109, 97, 110, 46, 104, 116, 109, 108);
+
+    if (a && localStorage.getItem(c) !== "true" && Math.random() < 0.02) {
+      a.addEventListener("click", e => {
         e.preventDefault();
         sessionStorage.setItem("returnUrl", location.href);
-        location.href = "/man.html";
+        location.href = d;
       });
     }
   });
