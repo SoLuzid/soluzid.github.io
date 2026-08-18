@@ -95,13 +95,25 @@ nav.main-nav li {
   position: relative;
 }
 
-nav.main-nav a {
+nav.main-nav li.music-toggle-item {
+  display: flex;
+  align-items: center;
+}
+
+nav.main-nav a,
+nav.main-nav .music-toggle {
   display: block;
   padding: 12px 24px;
   color: #dba5ca;
   text-decoration: none;
   font-weight: bold;
   white-space: nowrap;
+}
+
+nav.main-nav .music-toggle:hover,
+nav.main-nav .music-toggle:focus-visible {
+  background-color: #4c3343;
+  color: #ffffff;
 }
 
 nav.main-nav a:hover,

@@ -106,7 +106,7 @@ function createArtCard(item) {
   li.style.textAlign = "center";
 
   const link = document.createElement("a");
-  link.href = "art.html?id=" + item.id;
+  link.href = "art?id=" + item.id;
   link.style.textDecoration = "none";
   link.style.color = COLORS.accent;
 

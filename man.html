@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <title>&lrm;</title>
     <style>
+        @font-face {
+            font-family: 'DeterminationMono';
+            src: url('DeterminationMonoWeb.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         html, body {
             margin: 0;
             width: 100%;
@@ -12,22 +20,42 @@
             overflow: hidden;
             font-family: sans-serif;
         }
-
+        
         #ayll {
             position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            image-rendering: pixelated;          
             display: block;
-            opacity: 0.06;
+            opacity: 1;
             cursor: default;
             user-select: none;
             -webkit-user-drag: none;
             pointer-events: none;
         }
 
+        #ayll2 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            image-rendering: pixelated;
+            display: block;
+            opacity: 0;
+            cursor: default;
+            user-select: none;
+            -webkit-webkit-user-drag: none;
+            pointer-events: none;
+        }
+
         #ayll.active {
-            opacity: 1;
             cursor: pointer;
             pointer-events: auto;
         }
@@ -41,7 +69,7 @@
             max-width: calc(100vw - 40px);
             min-height: 120px;
             padding: 18px 24px;
-            border: 2px solid white;
+            border: 10px solid white;
             background: rgba(0, 0, 0, 0.92);
             color: white;
             box-sizing: border-box;
@@ -49,10 +77,16 @@
             cursor: pointer;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            font-size: 22px;
+            text-align: left;
+            font-family: 'DeterminationMono', monospace;
+            font-size: 32px;
             line-height: 1.5;
             white-space: pre-line;
+            z-index: 10;
+            font-smooth: never;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeSpeed;
         }
 
         #kphsvnblAlea {
@@ -63,82 +97,126 @@
 <body>
 
 <audio id="tbzpj" src="man.ogg" loop preload="auto"></audio>
-<img id="ayll" src="gifs/ayll.gif" alt="ayll">
+<img id="ayll" src="images/darktree.png" alt="ayll">
+<img id="ayll2" src="images/darken.png" alt="ayll">
 <div id="kphsvnbl"><div id="kphsvnblAlea"></div></div>
 
 <script>
 (() => {
-    const z = s => document.getElementById(s);
-    const a = z("tbzpj");
-    const b = z("ayll");
-    const c = z("kphsvnbl");
-    const d = z("kphsvnblAlea");
-    const e = [
-        "(Zhoo, wkhuh lv d pdq khuh.)",
-        "(Kh riihuhg brx vrphwklqj.)",
-        "Brx jrw wkh hjj."
+    const audio = document.getElementById("tbzpj");
+    const treeImage = document.getElementById("ayll");
+    const darkenImage = document.getElementById("ayll2");
+    const messageBox = document.getElementById("kphsvnbl");
+    const messageText = document.getElementById("kphsvnblAlea");
+    const messages = [
+        "* (Well, there is a man here.)",
+        "* (He offered you something.)",
+        "* (You got the egg.)"
     ];
-    const f = 3;
-    const g = t => t.replace(/[a-zA-Z]/g, u => {
-        const v = u <= "Z" ? 65 : 97;
-        return String.fromCharCode((u.charCodeAt(0) - v - f + 260) % 26 + v);
-    });
-    const h = e.map(g);
-    const i = sessionStorage.getItem("returnUrl") || document.referrer || "index.html";
-    let j = 0;
-    let k = 0;
-    let l = 0;
+    const returnUrl = sessionStorage.getItem("returnUrl") || document.referrer || "index.html";
+    
+    let messageIndex = 0;
+    let isTyping = false;
+    let isAudioPlaying = false;
 
-    const m = () => {
-        if (l) return;
-        l = 1;
-        b.classList.add("active");
-        a.play().catch(() => {
-            l = 0;
-            b.classList.remove("active");
+    const playAudio = () => {
+        if (isAudioPlaying) return;
+        isAudioPlaying = true;
+        treeImage.classList.add("active");
+        treeImage.src = "images/tree.png";
+        darkenImage.style.display = "none";
+        audio.play().catch(() => {
+            isAudioPlaying = false;
+            treeImage.classList.remove("active");
         });
     };
 
-    const n = (q, r) => {
-        k = 1;
-        d.textContent = "";
-        let s = 0;
-        const t = setInterval(() => {
-            d.textContent += q[s++];
-            if (s >= q.length) {
-                clearInterval(t);
-                k = 0;
-                if (r) r();
+    const typeMessage = (message, callback) => {
+        isTyping = true;
+        messageText.textContent = "";
+        let charIndex = 0;
+        const typeInterval = setInterval(() => {
+            messageText.textContent += message[charIndex++];
+            if (charIndex >= message.length) {
+                clearInterval(typeInterval);
+                isTyping = false;
+                callback?.();
             }
         }, 35);
     };
 
-    const o = () => {
-        if (!l) return;
-        if (c.style.display === "flex") return;
-        c.style.display = "flex";
-        j = 0;
-        n(h[0]);
+    const showMessage = () => {
+        if (!isAudioPlaying || messageBox.style.display === "flex") return;
+        messageBox.style.display = "flex";
+        messageBox.style.opacity = "1";
+        messageIndex = 0;
+        typeMessage(messages[0]);
     };
 
-    const p = () => {
-        if (k) return;
-        j++;
-        if (j >= h.length) return;
-        n(h[j], () => {
-            if (j === 2) {
+    const nextMessage = () => {
+        if (isTyping || ++messageIndex >= messages.length) return;
+
+        if (messageIndex === 2) {
+            audio.pause();
+            audio.currentTime = 0;
+            isAudioPlaying = false;
+            treeImage.classList.remove("active");
+        }
+
+        typeMessage(messages[messageIndex], () => {
+            if (messageIndex === 2) {
                 localStorage.setItem("manegg", "true");
+
                 setTimeout(() => {
-                    location.href = i;
-                }, 2000);
+                    darkenImage.style.display = "block";
+                    darkenImage.src = "images/notree.png";
+                    darkenImage.style.transition = "none";
+                    darkenImage.style.opacity = "0";
+                    treeImage.style.transition = "none";
+                    treeImage.style.opacity = "1";
+                    messageBox.style.transition = "none";
+                    messageBox.style.opacity = "1";
+
+                    const treeMaskSteps = [0.25, 0.5, 0.75, 1];
+                    treeMaskSteps.forEach((opacity, index) => {
+                        setTimeout(() => {
+                            darkenImage.style.opacity = String(opacity);
+                        }, index * 1000);
+                    });
+
+                    setTimeout(() => {
+                        const treeFadeSteps = [1, 0.75, 0.5, 0.25, 0];
+                        treeFadeSteps.forEach((opacity, index) => {
+                            setTimeout(() => {
+                                treeImage.style.opacity = String(opacity);
+                            }, index * 1000);
+                        });
+
+                        setTimeout(() => {
+                            darkenImage.src = "images/darken.png";
+                            darkenImage.style.opacity = "0";
+
+                            const cloudDarkenSteps = [0.25, 0.5, 0.75, 1];
+                            cloudDarkenSteps.forEach((opacity, index) => {
+                                setTimeout(() => {
+                                    darkenImage.style.opacity = String(opacity);
+                                }, index * 1000);
+                            });
+
+                            setTimeout(() => {
+                                darkenImage.style.opacity = "1";
+                                location.href = returnUrl;
+                            }, 4 * 1000 + 250);
+                        }, 4 * 1000 + 250);
+                    }, 4 * 1000 + 250);
+                }, 1000);
             }
         });
     };
 
-    document.addEventListener("pointerdown", m, { once: true });
-    document.addEventListener("keydown", m, { once: true });
-    b.addEventListener("click", o);
-    c.addEventListener("click", p);
+    document.addEventListener("pointerdown", playAudio, { once: true });
+    treeImage.addEventListener("click", showMessage);
+    messageBox.addEventListener("click", nextMessage);
 })();
 </script>
 

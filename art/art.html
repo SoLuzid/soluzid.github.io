@@ -11,10 +11,26 @@
   </head>
 
   <body>
-    <main class="art-container">
-      <h2><a href="/art"> go back </a></h2>
-      <img id="artImage" alt="art">
-      <p id="artCaption" class="art-caption"></p>
+    <script src="/header.js"></script>
+
+    <main class="art-page">
+      <div class="art-container">
+        <div class="art-header">
+          <h2><a href="/art/">go back</a></h2>
+        </div>
+
+        <div class="art-toolbar" aria-label="Art zoom controls">
+          <button class="zoom-btn" type="button" data-zoom="out" aria-label="Zoom out">−</button>
+          <button class="zoom-btn" type="button" data-zoom="reset" aria-label="Reset zoom">100%</button>
+          <button class="zoom-btn" type="button" data-zoom="in" aria-label="Zoom in">+</button>
+        </div>
+
+        <div class="art-stage" id="artStage">
+          <img id="artImage" alt="art">
+        </div>
+
+        <p id="artCaption" class="art-caption"></p>
+      </div>
     </main>
 
     <script src="art-data.js"></script>
@@ -24,6 +40,55 @@
       const container = document.querySelector(".art-container");
       const img = document.getElementById("artImage");
       const caption = document.getElementById("artCaption");
+      const artStage = document.getElementById("artStage");
+      const zoomButtons = document.querySelectorAll(".zoom-btn");
+      const STEP = 0.25;
+      const MAX_ZOOM = 1.1256733645075604e+32;
+      const MIN_ZOOM = -1.1256733645075604e+32;
+      let zoom = 1;
+      let offsetX = 0;
+      let offsetY = 0;
+      let activePointers = new Map();
+      let dragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let dragOffsetX = 0;
+      let dragOffsetY = 0;
+      let pinchStartDistance = 0;
+      let pinchStartZoom = 1;
+
+      function applyTransform() {
+        const displayZoom = Math.abs(zoom) || 1;
+        const rotation = zoom < 0 ? 180 : 0;
+        const isHidden = Math.abs(zoom) < 0.01;
+        img.style.opacity = isHidden ? "0" : "1";
+        img.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg) scale(${displayZoom})`;
+        const resetButton = document.querySelector('[data-zoom="reset"]');
+        if (resetButton) {
+          resetButton.textContent = `${Math.round(zoom * 100)}%`;
+        }
+      }
+
+      function setZoom(nextZoom, anchorX = artStage.clientWidth / 2, anchorY = artStage.clientHeight / 2) {
+        const previousZoom = Math.abs(zoom) < 0.01 ? 1 : zoom;
+        const safeZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, nextZoom));
+        const centerX = anchorX - artStage.clientWidth / 2;
+        const centerY = anchorY - artStage.clientHeight / 2;
+        const imageX = (centerX - offsetX) / previousZoom;
+        const imageY = (centerY - offsetY) / previousZoom;
+
+        zoom = safeZoom;
+        offsetX = centerX - imageX * zoom;
+        offsetY = centerY - imageY * zoom;
+        applyTransform();
+      }
+
+      function resetView() {
+        zoom = 1;
+        offsetX = 0;
+        offsetY = 0;
+        applyTransform();
+      }
 
       if (!id || !ART_DATA[id]) {
         container.innerHTML = "";
@@ -85,6 +150,99 @@
       img.src = art.image;
       img.className = "art-image";
       caption.textContent = art.caption;
+      applyTransform();
+
+      zoomButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const mode = button.dataset.zoom;
+          const centerX = artStage.clientWidth / 2;
+          const centerY = artStage.clientHeight / 2;
+          if (mode === "in") {
+            setZoom(zoom + STEP, centerX, centerY);
+          } else if (mode === "out") {
+            setZoom(zoom - STEP, centerX, centerY);
+          } else {
+            resetView();
+          }
+        });
+      });
+
+      artStage.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        const rect = artStage.getBoundingClientRect();
+        const pointerX = event.clientX - rect.left;
+        const pointerY = event.clientY - rect.top;
+        const factor = event.deltaY < 0 ? 1.12 : 0.88;
+        setZoom(zoom * factor, pointerX, pointerY);
+      }, { passive: false });
+
+      artStage.addEventListener("pointerdown", (event) => {
+        artStage.setPointerCapture(event.pointerId);
+        activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+        if (activePointers.size === 1) {
+          dragging = true;
+          dragStartX = event.clientX;
+          dragStartY = event.clientY;
+          dragOffsetX = offsetX;
+          dragOffsetY = offsetY;
+          artStage.classList.add("dragging");
+        }
+
+        if (activePointers.size === 2) {
+          const [first, second] = Array.from(activePointers.values());
+          pinchStartDistance = Math.hypot(second.x - first.x, second.y - first.y);
+          pinchStartZoom = zoom;
+        }
+      });
+
+      artStage.addEventListener("pointermove", (event) => {
+        if (!activePointers.has(event.pointerId)) {
+          return;
+        }
+
+        activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+        if (activePointers.size === 1 && dragging) {
+          const dx = event.clientX - dragStartX;
+          const dy = event.clientY - dragStartY;
+          offsetX = dragOffsetX + dx;
+          offsetY = dragOffsetY + dy;
+          applyTransform();
+        }
+
+        if (activePointers.size >= 2) {
+          const [first, second] = Array.from(activePointers.values());
+          const currentDistance = Math.hypot(second.x - first.x, second.y - first.y);
+          const centerX = (first.x + second.x) / 2 - artStage.getBoundingClientRect().left;
+          const centerY = (first.y + second.y) / 2 - artStage.getBoundingClientRect().top;
+
+          if (pinchStartDistance > 0) {
+            setZoom(pinchStartZoom * (currentDistance / pinchStartDistance), centerX, centerY);
+          }
+        }
+      });
+
+      function endPointer(event) {
+        activePointers.delete(event.pointerId);
+
+        if (activePointers.size < 2) {
+          pinchStartDistance = 0;
+        }
+
+        if (activePointers.size === 0) {
+          dragging = false;
+          artStage.classList.remove("dragging");
+        }
+      }
+
+      artStage.addEventListener("pointerup", endPointer);
+      artStage.addEventListener("pointercancel", endPointer);
+      artStage.addEventListener("pointerleave", (event) => {
+        if (event.pointerType === "mouse" && activePointers.size === 1) {
+          endPointer(event);
+        }
+      });
       </script>
   </body>
 </html>
