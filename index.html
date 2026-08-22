@@ -49,7 +49,20 @@
     const yuurisleep = document.getElementById("yuurisleep");
     const currentHour = new Date().getHours();
 
-    if (currentHour >= 0 && currentHour < 5) {
+    const manegg = localStorage.getItem("manegg") === "true";
+    const manegg2 = localStorage.getItem("manegg2") === "true";
+
+    if (manegg && manegg2) {
+      document.querySelector("h1").textContent = "Hello";
+      document.querySelectorAll("h2")[0].textContent = "This is my site";
+      document.querySelectorAll("h2")[1].textContent = "Welcome";
+      document.querySelectorAll("p")[0].textContent = "Enjoy your visit.";
+      document.querySelectorAll("p")[1].textContent = "I occasionally add new content.";
+      document.querySelectorAll("p")[2].textContent = "Don't expect it to be frequent.";
+      document.querySelectorAll("p")[3].textContent = "There may be useful stuff the header.";
+      nightnight.textContent = "Thank you for having fun. See you soon.";
+      yuurisleep.remove();
+    } else if (currentHour >= 0 && currentHour < 5) {
       nightnight.textContent = "that's all, go to sleep bro it's late";
       yuurisleep.src = "gifs/yuuri1.gif";
     } else if (currentHour >= 5 && currentHour < 12) {

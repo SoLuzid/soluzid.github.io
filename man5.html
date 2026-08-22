@@ -90,7 +90,7 @@
 </head>
 <body>
 
-<audio id="tbzpj" src="man.ogg" loop preload="auto"></audio>
+<audio id="tbzpj" src="deltarune_piano_collections_by_trevor_alan_gomes.ogg" loop preload="auto"></audio>
 <img id="ayll" src="images/darktree.png" alt="ayll">
 <img id="ayll2" src="images/darken.png" alt="ayll">
 <div id="kphsvnbl"><div id="kphsvnblAlea"></div></div>
@@ -103,20 +103,32 @@
     const messageBox = document.getElementById("kphsvnbl");
     const messageText = document.getElementById("kphsvnblAlea");
     const messages = [
-        "* (Well, there is a man here.)",
-        "* (He offered you something.)",
-        "* (You received the \"Egg\".)"
+        "* (You received the \"Egg\".)",
+        "* (You asked for more.)",
+        "* (Well, the man put his hand softly on your shoulder.)",
+        "* (And, showing you his empty palm...)",
+        "* (He put his finger to his mouth, smiled, and shook his head.)",
+        "* (It seems you have everything.)",
+        "* (...)",
+        "* (He waved goodbye, looking away slightly after a moment.)",
+        "* (...)",
+        "* (You felt a strange melancholy.)",
+        "* (It was a feeling that you should not look for the man anymore.)",
+        "* (... even though you had never done such a thing in the first place.)",
+        "* (...)"
     ];
     const returnUrl = sessionStorage.getItem("returnUrl") || document.referrer || "index.html";
 
     let messageIndex = 0;
     let isTyping = false;
-    let state = "inactive";
+    let activated = false;
+    let musicStopped = false;
+    let finished = false;
 
     const activate = () => {
-        if (state !== "inactive") return;
+        if (activated) return;
 
-        state = "active";
+        activated = true;
         treeImage.src = "images/tree.png";
         darkenImage.style.display = "none";
 
@@ -141,7 +153,7 @@
     };
 
     const showMessage = () => {
-        if (state !== "active" || messageBox.style.display === "flex") return;
+        if (!activated || finished || messageBox.style.display === "flex") return;
 
         messageBox.style.display = "flex";
         messageBox.style.opacity = "1";
@@ -151,74 +163,37 @@
     };
 
     const nextMessage = () => {
-        if (state !== "active" || isTyping) return;
+        if (!activated || finished || isTyping) return;
 
         messageIndex++;
 
         if (messageIndex >= messages.length) return;
 
-        if (messageIndex === 2) {
-            audio.pause();
-            audio.currentTime = 0;
-            state = "finished";
+        if (messageIndex === 5) {
+            darkenImage.style.opacity = "0.25";
+            darkenImage.style.display = "block";
         }
 
-        typeMessage(messages[messageIndex], () => {
-            if (messageIndex === 2) {
-                localStorage.setItem("manegg", "true");
+        if (messageIndex === 8 && !musicStopped) {
+            audio.pause();
+            audio.currentTime = 0;
+            musicStopped = true;
+            localStorage.setItem("manegg2", "true");
+            treeImage.style.opacity = "0";
+        }
 
-                setTimeout(() => {
-                    darkenImage.style.display = "block";
-                    darkenImage.src = "images/notree.png";
-                    darkenImage.style.transition = "none";
-                    darkenImage.style.opacity = "0";
-                    treeImage.style.transition = "none";
-                    treeImage.style.opacity = "1";
-                    messageBox.style.transition = "none";
-                    messageBox.style.opacity = "1";
+        if (messageIndex === 12) {
+            localStorage.setItem("manegg2", "true");
+            finished = true;
+            location.href = returnUrl;
+            return;
+        }
 
-                    const treeMaskSteps = [0.25, 0.5, 0.75, 1];
-
-                    treeMaskSteps.forEach((opacity, index) => {
-                        setTimeout(() => {
-                            darkenImage.style.opacity = String(opacity);
-                        }, index * 1000);
-                    });
-
-                    setTimeout(() => {
-                        const treeFadeSteps = [1, 0.75, 0.5, 0.25, 0];
-
-                        treeFadeSteps.forEach((opacity, index) => {
-                            setTimeout(() => {
-                                treeImage.style.opacity = String(opacity);
-                            }, index * 1000);
-                        });
-
-                        setTimeout(() => {
-                            darkenImage.src = "images/darken.png";
-                            darkenImage.style.opacity = "0";
-
-                            const cloudDarkenSteps = [0.25, 0.5, 0.75, 1];
-
-                            cloudDarkenSteps.forEach((opacity, index) => {
-                                setTimeout(() => {
-                                    darkenImage.style.opacity = String(opacity);
-                                }, index * 1000);
-                            });
-
-                            setTimeout(() => {
-                                darkenImage.style.opacity = "1";
-                                location.href = returnUrl;
-                            }, 4250);
-                        }, 4250);
-                    }, 4250);
-                }, 1000);
-            }
-        });
+        typeMessage(messages[messageIndex]);
     };
 
     document.addEventListener("click", event => {
-        if (state === "finished") return;
+        if (finished) return;
 
         if (messageBox.style.display === "flex") {
             if (messageBox.contains(event.target)) {
@@ -227,7 +202,7 @@
             return;
         }
 
-        if (state === "inactive") {
+        if (!activated) {
             activate();
             return;
         }

@@ -37,21 +37,15 @@
 
     <script>
     (() => {
-        const k = [109,97,110,101,103,103]
-            .map(x => String.fromCharCode(x))
-            .join("");
+        const key = "manegg";
+        const permalock = "manegg2";
 
-        if (localStorage.getItem(k) === "true") {
+        if (localStorage.getItem(key) === "true" && localStorage.getItem(permalock) !== "true") {
             const a = document.createElement("a");
 
-            a.textContent = [68,69,86,73,67,69,95,87,69,66,83,73,84,69]
-                .map(x => String.fromCharCode(x))
-                .join("");
+            a.textContent = "DEVICE_WEBSITE";
 
-            a.href = "/" + [
-                68,69,86,73,67,69,95,87,69,66,83,73,84,69,
-                46,104,116,109,108
-            ].map(x => String.fromCharCode(x)).join("");
+            a.href = "/DEVICE_WEBSITE.html";
 
             a.style.marginTop = "1200px";
 
