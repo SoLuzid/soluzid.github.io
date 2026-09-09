@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Code.</title>
+    <link rel="icon" type="image/x-icon" href="/no.ico">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: black;
+            color: white;
+        }
+
+        main {
+            width: min(90vw, 30rem);
+            text-align: left;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 400;
+        }
+
+        h1::before { content: ""; }
+
+        input, button {
+            box-sizing: border-box;
+            padding: 0.7rem;
+            border: 2px solid white;
+            background: black;
+            color: white;
+            font: inherit;
+        }
+
+        button { cursor: pointer; color: white; }
+        button:hover { border-color: black; }
+        #error { min-height: 1.2em; color: #ff0000; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>what's the code?</h1>
+        <form id="code-form">
+            <input id="code" type="text" autocomplete="off" aria-label="Code" required>
+            <button type="submit">Enter</button>
+        </form>
+        <p id="error" role="alert"></p>
+    </main>
+
+    <script>
+        const form = document.getElementById('code-form');
+        const input = document.getElementById('code');
+        const error = document.getElementById('error');
+
+        const messages = {
+            '1225': 'too predictable, don’t you think?',
+            '2024': "okay. that's the wrong thing.",
+            '2021': 'a chapter too late.',
+            '2025': 'two chapters too late.',
+            '2026': 'not in the present.',
+            '1997': 'what are you trying to do?',
+            '20252': "what?",
+            '2023': 'you are too late, too late.',
+            '2022': 'you are too late, close. but not quite right.',
+            '2020': 'you are too late. get to the previous century.',
+            '666': 'that doesnt make sense.',
+            '616': "are you trying to summon something?",
+            '420': "what does this mean?",
+            '69': "not funny.",
+            '67': "i said. it's NOT funny.",
+            '76': "volt. you made code this in. fuck you, also fuck you for pinpointing the mispelling",
+            '42': "the answer to life, the universe, and everything. but not the code.",
+            '2015': "yes undertale released in 2015 but not the other game.",
+            '2014': "dude, that's before the game released on steam."
+        };
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const code = input.value.trim().toUpperCase();
+
+            if (code === '2018') {
+                window.location.href = 'messageforafriend.html';
+                return;
+            }
+
+            error.textContent = messages[code] || 'error';
+        });
+    </script>
+</body>
+</html>

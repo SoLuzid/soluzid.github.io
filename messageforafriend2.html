@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Code.</title>
+    <link rel="icon" type="image/x-icon" href="/no.ico">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: black;
+            color: white;
+        }
+
+        main {
+            width: min(90vw, 30rem);
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 400;
+        }
+
+        h1::before { content: ""; }
+
+        input, button {
+            box-sizing: border-box;
+            padding: 0.7rem;
+            border: 2px solid white;
+            background: black;
+            color: white;
+            font: inherit;
+        }
+
+        button { cursor: pointer; color: white; }
+        button:hover { border-color: black; }
+        #error { min-height: 1.2em; color: #ff0000; }
+
+        #mainunlock {
+            display: none;
+            color: #171017;
+            font-size: 1.25rem;
+            width: min(90vw, 40rem);
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        #slideshow {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border: 2px solid white;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #slide-image {
+            display: block;
+            width: min(100%, 32rem);
+            max-height: 24rem;
+            object-fit: contain;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 1rem;
+        }
+
+        #slide-text { min-height: 1.5em; }
+
+        body.final-slide-lock {
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .slide-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        #mainunlock button {
+            border-color: white;
+            background: #f3a6c8;
+            color: #171017;
+        }
+
+        #mainunlock button:hover {
+            background: #171017;
+            border-color: white;
+            color: #f3a6c8;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>the code is simple this time i swear. hell ill even give you a hint: the year of the game we worked on for almost two years now</h1>
+        <form id="code-form">
+            <input id="code" type="text" autocomplete="off" aria-label="Code" required>
+            <button type="submit">Enter</button>
+        </form>
+        <p id="error" role="alert"></p>
+    </main>
+
+    <section id="mainunlock">
+        <p>Oh, squiggles. you actually did find the codes!</p>
+        <p>wow! i wasted your time!</p>
+        <p>well not much. here's some words</p>
+        <p>ik i already s aid this in the audio but</p>
+        <p>you're a really nice friend!</p>
+        <p>i really appreciate you being there for me.</p>
+        <p>you're also really cool!</p>
+        <p>you're very silly and cute sometimes (PLATONICALLY, I SWEAR TO GOD IF YOU TAKE THIS WRONG ILL GIVE YOU THE FUCKING FLOWERY TREATMENT.)</p>
+        <p>ya</p>
+        <br>
+        <br>
+        <p>Time for the cool: Slideshow</p>
+        <div id="slideshow">
+            <img id="slide-image" alt="">
+            <p id="slide-text"></p>
+            <div class="slide-controls">
+                <button id="previous-slide" type="button">Previous</button>
+                <button id="next-slide" type="button">Next</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        if (localStorage.getItem('fortheunseenitshallbe') === 'true') {
+            document.body.innerHTML = '<a href="/" style="font-size: 3rem; display: inline-block;">nuh uh.</a>';
+        } else {
+        const form = document.getElementById('code-form');
+        const input = document.getElementById('code');
+        const error = document.getElementById('error');
+
+        const slides = [
+            { image: 'images/tree.png', text: 'the tree.' },
+            { image: '', text: 'yeah i wanted you to see it.' },
+            { image: '', text: "it's stupid" },
+            { image: 'images/Seth_Deltarune.webp', text: "oh yeah right your fav deltarune character" },
+            { image: 'images/seth-appreciation-post-v0-t7lo6gff8g9h1.webp', text: "you like them alot dont ya" },
+            { image: 'images/Seth_Deltarune.webp', text: "yeahhh" },
+            { image: '', text: "yes i have indeed wasted your time with 3 codes to get here. isnt that awesome?" }
+        ];
+        let currentSlide = 0;
+        let finalSlideLocked = false;
+        let finalSlideTimer;
+
+        const slideImage = document.getElementById('slide-image');
+        const slideText = document.getElementById('slide-text');
+
+        function showSlide(index) {
+            if (finalSlideLocked) return;
+
+            currentSlide = (index + slides.length) % slides.length;
+            const slide = slides[currentSlide];
+            slideText.textContent = slide.text;
+            slideImage.src = slide.image;
+            slideImage.alt = slide.text;
+            slideImage.style.display = slide.image ? 'block' : 'none';
+
+            if (currentSlide === slides.length - 1) {
+                finalSlideLocked = true;
+                document.body.classList.add('final-slide-lock');
+                document.querySelectorAll('button, input').forEach((element) => {
+                    element.disabled = true;
+                });
+
+                const preventInteraction = (event) => event.preventDefault();
+                ['wheel', 'touchmove', 'scroll', 'keydown', 'mousedown', 'pointerdown'].forEach((eventName) => {
+                    window.addEventListener(eventName, preventInteraction, { capture: true, passive: false });
+                });
+
+                finalSlideTimer = setTimeout(() => {
+                    slide.backgroundColor = '#000000';
+                    document.body.style.backgroundColor = '#000000';
+                    slideText.textContent = "Didn't expect this huh?";
+                }, 2000);
+
+                setTimeout(() => {
+                    clearTimeout(finalSlideTimer);
+                    localStorage.setItem('fortheunseenitshallbe', 'true');
+                    window.location.href = '/';
+                }, 4000);
+            }
+        }
+
+        document.getElementById('previous-slide').addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        document.getElementById('next-slide').addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        showSlide(0);
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const code = input.value.trim().toUpperCase();
+
+            if (code === '2024') {
+                document.title = 'Thank You';
+                document.querySelector('link[rel="icon"]').href = '/favicon.ico';
+                document.querySelector('main').style.display = 'none';
+                document.body.style.backgroundColor = '#f3a6c8';
+                document.body.classList.add('unlocked');
+                document.getElementById('mainunlock').style.display = 'block';
+                return;
+            }
+
+            error.textContent = messages[code] || 'error';
+        });
+        }
+    </script>
+</body>
+</html>

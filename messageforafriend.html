@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Code.</title>
+    <link rel="icon" type="image/x-icon" href="/no.ico">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: black;
+            color: white;
+        }
+
+        main {
+            width: min(90vw, 30rem);
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 400;
+        }
+
+        h1::before { content: ""; }
+
+        input, button {
+            box-sizing: border-box;
+            padding: 0.7rem;
+            border: 2px solid white;
+            background: black;
+            color: white;
+            font: inherit;
+        }
+
+        button { cursor: pointer; color: white; }
+        button:hover { border-color: black; }
+        #error { min-height: 1.2em; color: #ff0000; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>didn't expect me, huh?</h1>
+        <form id="code-form">
+            <input id="code" type="text" autocomplete="off" aria-label="Code" required>
+            <button type="submit">Enter</button>
+        </form>
+        <p id="error" role="alert"></p>
+    </main>
+
+    <script>
+        const form = document.getElementById('code-form');
+        const input = document.getElementById('code');
+        const error = document.getElementById('error');
+
+        const messages = {
+            '1225': 'why would it be that? this is more personal',
+            '2024': "okay. that's the wrong thing.",
+            '2021': 'we met way after. that',
+            '2018': 'that code was already used.',
+            '2026': 'not in the present.',
+            '1997': 'what are you trying to do?',
+            '20252': "what?",
+            '2023': 'you are too early, too early.',
+            '2022': 'you are too early, not even close',
+            '2020': 'you are too early. way. WAY too early.',
+            '666': 'that doesnt make sense.',
+            '616': "are you trying to summon something?",
+            '420': "what does this mean?",
+            '69': "no respect huh?",
+            '67': "fuck you.",
+            '76': "... squiggles if you thought this is funny im ripping your throat out and eating it infront of you while you bleed out.",
+            '42': "the answer to life, the universe, and everything. but not the code.",
+        };
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const code = input.value.trim().toUpperCase();
+
+            if (code === '2025') {
+                window.location.href = 'messageforafriend2.html';
+                return;
+            }
+
+            error.textContent = messages[code] || 'error';
+        });
+    </script>
+</body>
+</html>

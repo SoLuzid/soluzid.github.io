@@ -13,11 +13,25 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+        .code {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
+    <a class="code" href="code.html"></a>
     <a href="SantaAdventure/secret/index.html">
     <img src="images/door.webp">
     </a>
+    <script>
+        if (localStorage.getItem('fortheunseenitshallbe') === 'true') {
+            document.querySelector('.code').href = 'messageforafriend2';
+        }
+    </script>
 </body>
 </html>
